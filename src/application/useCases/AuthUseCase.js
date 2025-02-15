@@ -45,5 +45,21 @@ export class AuthUseCase{
           }
        
         return { createdUser };
-    }    
+    } 
+    
+    async login(user){
+       
+
+        const User = await this.AuthRepository.findByEmail(user.email)
+        if(!User){
+            throw new Error("user not found")
+        }
+        const isVerified = await bcrypt.compare(user.password,User.password)
+        if(isVerified){
+            const userResponse = {username:User.username,email:User.email}
+            return(userResponse)
+        }else{
+            throw new Error("incorrect password")
+        }
+    }
 }

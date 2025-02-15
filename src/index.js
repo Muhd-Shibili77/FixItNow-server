@@ -16,9 +16,6 @@ app.use(cors({
 app.use("/auth",AuteRoutes)
 
 
-app.get('/',(req,res)=>{
-    res.send('helo guyss')
-})
 
 app.listen(process.env.PORT,()=>{
     console.log(`server is started at http://localhost:${process.env.PORT}`)
