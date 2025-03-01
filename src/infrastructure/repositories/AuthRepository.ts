@@ -6,10 +6,10 @@ import OTP from '../models/otpModel'
 import {mailService} from '../services/emailService'
 import User from "../../domain/entity/User";
 import Worker from "../../domain/entity/Worker";
+import { IAuthRepository } from "../../application/Interfaces/IAuthinterfaces";
 
 
-export class AuthRepository{
-    constructor(){}
+export class AuthRepository implements IAuthRepository{
 
     async create(newUser:User):Promise<User>{
         
@@ -108,6 +108,33 @@ export class AuthRepository{
             throw new Error("Unable to deleting otp");
         }
     }
+
+    async createGoogleUser(username: string, email: string): Promise<User> {
+        const createUser = await UserModel.create({
+            username :username,
+            email:email,
+            isGoogleAuth:true,
+        })
+        return createUser
+    }
+
+    async createGoogleWorker(username: string, email: string, name: string, service: string, experience: number, phone: number, about: string, profileImage: string): Promise<Worker> {
+        const createWorker = await WorkerModel.create({
+            username: username,
+            email: email,
+            phone: phone,
+            name: name,
+            service: service,
+            experience: experience,
+            about: about,
+            profileImage: profileImage,
+            isGoogleAuth:true,
+        })
+        
+       return  createWorker
+    }
+
+    
 
 
 }

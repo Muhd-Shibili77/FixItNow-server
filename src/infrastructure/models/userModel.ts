@@ -6,6 +6,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
     password:string,
     phone?:number,
     isBlock?:boolean,
+    isGoogleAuth?:boolean
 }
 
 const UsersSchema:Schema<IUser> = new Schema({
@@ -16,7 +17,7 @@ const UsersSchema:Schema<IUser> = new Schema({
      type: String, required: true, unique: true 
   },
   password:{
-     type: String, required: true
+     type: String,
   },
   phone:{
      type: Number 
@@ -24,6 +25,9 @@ const UsersSchema:Schema<IUser> = new Schema({
   isBlock:{
      type: Boolean, required: true ,default:false
   },
+  isGoogleAuth:{
+   type:Boolean ,required:true,default:false
+  }
 
 });
 

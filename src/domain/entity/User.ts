@@ -7,6 +7,8 @@ class User {
     public phone?:number;
     public isBlock?:boolean;
     public conformpassword?: string;
+    public isGoogleAuth?: boolean;
+
     constructor(data:Partial<User>){
         Object.assign(this,data);
     }

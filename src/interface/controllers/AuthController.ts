@@ -98,4 +98,51 @@ export class AuthController{
         }
 
     }
+
+    async googleAuth(req: Request, res: Response): Promise<Response> {
+        try {
+          const { credential } = req.body;
+          const response = await this.AuthUseCase.googleLogin(credential);
+          return res.status(200).json({
+            success: true,
+            message: "Google login successful",
+            ...response
+          });
+        } catch (error: any) {
+          return res.status(400).json({
+            success: false,
+            message: error.message
+          });
+        }
+      }
+
+      async googleCreateUser(req:Request,res:Response): Promise<void>{
+        try {
+            
+            const {username , email}=req.body
+            
+            const response = await this.AuthUseCase.googleCreateUser(username,email)
+            res.json({ success: true, message: "User registered with google successfully" ,response,Token:response.Token});
+
+        } catch (error:any) {
+            console.error(error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+       
+
+      }
+
+      async googleCreateWorker(req:Request,res:Response):Promise<void>{
+        try {
+            const {name,service,experience,phone,about,username,email} =req.body
+            const profileImage: string = req.file?.filename || "";
+            const response = await this.AuthUseCase.googleCreateWorker(username,email,name,service,experience,phone,about,profileImage)    
+            res.json({ success: true, message: "worker registered with google successfully" ,response,Token:response.Token});
+
+        } catch (error:any){
+            console.error(error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+       
+      }
 }

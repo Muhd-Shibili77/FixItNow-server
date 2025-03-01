@@ -23,11 +23,9 @@ router.post('/resend-otp',async (req: Request, res: Response): Promise<void>=>{
 
 router.post('/register',async (req: Request, res: Response): Promise<void>=>{
     await authController.createUser(req,res)
-    
 })
 
 router.post('/worker-register',upload.single('image'),async(req: Request, res: Response): Promise<void>=>{
-    
     await authController.createWorker(req,res)
 })
 
@@ -35,5 +33,14 @@ router.post('/login',async (req: Request, res: Response): Promise<void>=>{
     await authController.loginUser(req,res)
 })
 
+router.post('/google', async (req: Request, res: Response): Promise<void> => {
+    await authController.googleAuth(req, res);
+});
+router.post('/google/register-user', async (req: Request, res: Response): Promise<void> => {
+    await authController.googleCreateUser(req, res);
+});
+router.post('/google/register-worker',upload.single('image'), async (req: Request, res: Response): Promise<void> => {
+    await authController.googleCreateWorker(req, res);
+});
 
 export default router;

@@ -11,6 +11,7 @@ class Worker {
     public password?:string; 
     public conformpassword?:string; 
     public email?:string;
+    public isGoogleAuth?: boolean;
 
 
     constructor(data: Partial<Worker>) {

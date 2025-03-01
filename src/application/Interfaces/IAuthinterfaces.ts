@@ -9,4 +9,6 @@ export interface IAuthRepository {
     deleteOtp(email: string): Promise<{ message: string }>;
     create(user: User): Promise<User>;
     createWorker(worker: Worker): Promise<Worker>;
+    createGoogleUser(name:string,email:string):Promise<User>;
+    createGoogleWorker(username:string,email:string,name:string,service:string,experience:number,phone:number,about:string,profileImage:string):Promise<Worker>
 }

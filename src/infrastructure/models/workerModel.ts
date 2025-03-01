@@ -3,7 +3,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 export interface IWorker extends Document{
     username:string,
     email:string,
-    password:string,
+    password?:string,
     phone:number,
     isBlock?:boolean,
     name:string,
@@ -11,6 +11,7 @@ export interface IWorker extends Document{
     experience:number,
     about:string,
     profileImage:string,
+    isGoogleAuth?:boolean
     
 
 }
@@ -24,7 +25,7 @@ const WorkerSchema:Schema = new Schema({
      type: String, required: true, unique: true 
   },
   password:{
-     type: String, required: true
+     type: String,
   },
   phone:{
      type: Number 
@@ -49,6 +50,9 @@ const WorkerSchema:Schema = new Schema({
   profileImage:{
     type:String,
 },
+isGoogleAuth:{
+  type:Boolean ,required:true,default:false
+ }
 });
 
 const WorkerModel:Model<IWorker> = mongoose.model<IWorker>("Workers", WorkerSchema);
