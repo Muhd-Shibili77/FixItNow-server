@@ -2,6 +2,8 @@ import Address from "../../domain/entity/Address";
 import Booking from "../../domain/entity/Booking";
 import { IUserRepository } from "../Interfaces/IUserRepository";
 
+
+
 export class UserUseCase{
     constructor(private userRepository : IUserRepository){}
 
@@ -80,7 +82,7 @@ export class UserUseCase{
 
     }
 
-    async getBookings(userId:string):Promise<Booking[]>{
+    async getBookings(userId:string):Promise<Booking[] | null>{
         if(!userId){
             throw new Error('userid is empty')
         }
@@ -91,7 +93,7 @@ export class UserUseCase{
 
         const bookings = await this.userRepository.findBookings(userId)
         if(!bookings){
-            throw new Error('bookings is empty')
+            return null
         }
         return bookings
     }

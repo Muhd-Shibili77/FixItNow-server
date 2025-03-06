@@ -9,6 +9,21 @@ import Service from "../../domain/entity/Service";
 import ServiceModel from "../models/serviceModel";
 import Booking from "../../domain/entity/Booking";
 import bookingModel from "../models/bookModel";
+import CounterModel from "../models/counterModel";
+
+async function generateBookingNo(){
+
+  const counter = await CounterModel.findOneAndUpdate(
+    {name:'bookingCounter'},
+    {$inc:{value:1}},
+    {new:true,upsert:true}
+  )
+
+  const prefix ='FIX'
+  const number = String(counter.value).padStart(4,"0")
+  return `${prefix}${number}`
+
+}
 
 export class UserRepository implements IUserRepository {
   async addAddress(address: Address): Promise<Address> {
@@ -84,6 +99,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async bookAnWorker(
+    
   workerId: string,
   serviceId: string,
   userId: string,
@@ -99,6 +115,7 @@ export class UserRepository implements IUserRepository {
   }
 ): Promise<Booking> {
 
+  const bookingNo = await generateBookingNo()
     
   const createBooking = await bookingModel.create({
     placedAt: new Date(),
@@ -106,11 +123,13 @@ export class UserRepository implements IUserRepository {
     serviceId,
     userId,
     bookingType,
-    address, 
+    address,
+    bookingNo, 
   });
 
   return new Booking({
     id: String(createBooking._id),
+    bookingNo:String(createBooking.bookingNo),
     placedAt: createBooking.placedAt,
     workerId: String(createBooking.workerId),
     serviceId: String(createBooking.serviceId),
@@ -145,6 +164,7 @@ async findBookings(userId: string): Promise<Booking[] | null> {
       serviceId: booking.serviceId,
       userId: booking.userId,
       bookingType: booking.bookingType,
+      bookingNo:booking.bookingNo,
       workStatus: booking.workStatus,
       reachingStatus: booking.reachingStatus,
       isAccepted: booking.isAccepted,

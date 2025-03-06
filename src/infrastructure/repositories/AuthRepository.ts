@@ -22,6 +22,7 @@ export class AuthRepository implements IAuthRepository{
     }
 
     async createWorker(newWorker:Worker):Promise<Worker>{
+        
         const createWorker = await WorkerModel.create({
             username: newWorker.username,
             email: newWorker.email,

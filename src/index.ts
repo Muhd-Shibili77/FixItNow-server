@@ -6,6 +6,7 @@ import ServiceRoutes from './interface/routes/ServiceRoutes'
 import AuthRoutes from './interface/routes/AuthRoutes'
 import WorkerRoutes from './interface/routes/WorkerRoutes'
 import UserRoutes from './interface/routes/UserRoutes'
+import AdminRoutes from './interface/routes/AdminRoutes'
 import connectDB from "./infrastructure/config/DB";
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/auth",AuthRoutes)
 app.use('/worker',WorkerRoutes)
 app.use('/service',ServiceRoutes)
 app.use('/user',UserRoutes)
+app.use('/admin',AdminRoutes)
 
 
 app.listen(process.env.PORT,()=>{

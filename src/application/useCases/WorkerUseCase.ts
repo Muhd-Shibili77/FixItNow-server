@@ -24,7 +24,7 @@ export class WorkerUseCase{
     }
 
     async WorkerProfileEdit(data:Worker):Promise<Worker>{
-
+   
         const {id,name,service,experience,phone,about} = data 
         
         if (!name || !service || !experience || !phone || !about) {
@@ -63,7 +63,7 @@ export class WorkerUseCase{
        
         const editedWorker = await this.WorkerRepository.editWorker(data);
        
-        if (!editedWorker.id) {
+        if (!editedWorker) {
             throw new Error("Failed to edit worker");
           }
        
@@ -87,9 +87,7 @@ export class WorkerUseCase{
             throw new Error('userid is empty')
         }
         const jobs = await this.WorkerRepository.getJob(workerId)
-        if(!jobs){
-            throw new Error('bookings is empty')
-        }
+       
         return jobs
     }
 

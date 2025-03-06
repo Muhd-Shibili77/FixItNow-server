@@ -3,27 +3,29 @@ import { WorkerController } from "../controllers/WorkerController";
 import { WorkerUseCase } from "../../application/useCases/WorkerUseCase";
 import { WorkerRepository } from "../../infrastructure/repositories/WorkerRepository";
 import upload from "../../infrastructure/config/multer";
+import { authenticateJWT } from "../middlewares/authMiddleware";
 
 const workerRepository = new WorkerRepository()
 const workerUseCase = new WorkerUseCase(workerRepository)
 const workerController = new WorkerController(workerUseCase); 
 const router = Router()
 
-router.get('/data',async (req:Request,res:Response):Promise<void>=>{
+router.get('/data',authenticateJWT(['User','Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.fetchWorker(req,res)
 })
 
-router.post('/edit-profile',upload.single('image'),async (req:Request,res:Response):Promise<void>=>{
+router.post('/edit-profile',authenticateJWT(['Worker']),upload.single('image'),async (req:Request,res:Response):Promise<void>=>{
+    
     await workerController.editProfile(req,res)
 })
 
-router.get('/getworker',async (req:Request,res:Response):Promise<void>=>{
+router.get('/getworker',authenticateJWT(['User']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.getWorker(req,res)
 })
-router.get('/getJob',async (req:Request,res:Response):Promise<void>=>{
+router.get('/getJob',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.getJob(req,res)
 })
-router.put('/updateJob',async (req:Request,res:Response):Promise<void>=>{
+router.put('/updateJob',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.updateJob(req,res)
 })
 

@@ -5,8 +5,9 @@ export enum WorkStatus {
   REQUESTED ='Requested',
   REJECTED ='Rejected',
     PENDING = 'Pending',
-    IN_PROGRESS = 'InProgress',
+    IN_PROGRESS = 'In Progress',
     COMPLETED = 'Completed',
+    CANCELLED ='Cancelled'
   }
   
   // Enum for reachingStatus
@@ -26,6 +27,7 @@ export interface IBooking extends Document {
   serviceId: string;
   amount: number;
   userId: string;
+  bookingNo:string,
   workStatus: boolean;
   reachingStatus: string;
   bookingType: string;
@@ -61,6 +63,7 @@ const bookingSchema: Schema = new Schema({
       default: ReachingStatus.NOT_STARTED,
     },
     bookingType: { type: String, required: true, enum: Object.values(BookingType) },
+    bookingNo: { type: String, required: true, },
  
     address: {
       name: { type: String, required: true },

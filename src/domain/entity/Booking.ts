@@ -4,6 +4,7 @@ class Booking {
   public readonly id!: string;
   public workerId!: string;
   public serviceId!: string;
+  public bookingNo!:string;
   public amount!: number;
   public userId!: string;
   public workStatus!: boolean;

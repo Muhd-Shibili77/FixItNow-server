@@ -24,7 +24,7 @@ export class WorkerRepository implements IWorkerRepository{
         if (!id) {
             throw new Error("Worker ID is required for updating details");
         }
-
+      
         const updatedWorker = await WorkerModel.findByIdAndUpdate(
             id,                
             { $set: updateData }, 

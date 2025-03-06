@@ -40,14 +40,21 @@ export class WorkerController{
 
     async editProfile(req:Request,res:Response):Promise<void>{
         try {
-
+            
             const {_id,name,service,experience,phone,about}=req.body
             
             if (!_id || !name || !service || !experience || !phone || !about) {
                 throw new Error("All fields are required");
               }
+              let image;
+              if (!req.file && req.body.image) {
+                image = req.body.image
+            } else if (req.file) {
+                image = req.file.filename
+            }
             
-            const image = req.file ? req.file.filename : undefined;
+            
+         
             const updateData: WorkerUpdateData = { 
                 id: _id, 
                 name, 

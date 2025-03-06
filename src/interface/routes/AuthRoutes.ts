@@ -43,4 +43,6 @@ router.post('/google/register-worker',upload.single('image'), async (req: Reques
     await authController.googleCreateWorker(req, res);
 });
 
+
+
 export default router;
