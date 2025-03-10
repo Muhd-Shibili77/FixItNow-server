@@ -33,7 +33,7 @@ export class UserUseCase{
         return address
     }
 
-    async bookWorker(bookingType:string,workerId:string,userId:string,bookAddress:string):Promise<Booking>{
+    async bookWorker(bookingType:string,date:string,workerId:string,userId:string,bookAddress:string):Promise<Booking>{
         if(!bookAddress || !bookingType || !workerId || !userId){
             throw new Error("All fields are required");
         }
@@ -73,10 +73,10 @@ export class UserUseCase{
         }
         
 
-       const bookAnWorker = await this.userRepository.bookAnWorker(workerId,service_id,userId,bookingType,addressArray)
+       const bookAnWorker = await this.userRepository.bookAnWorker(workerId,service_id,userId,bookingType,date,addressArray)
        if(!bookAnWorker){
-        throw new Error('failed to book')
-    }
+         throw new Error('failed to book')
+        }
    
     return bookAnWorker
 

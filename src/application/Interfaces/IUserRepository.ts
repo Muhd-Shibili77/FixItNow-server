@@ -17,6 +17,7 @@ export interface IUserRepository {
     serviceId: string,
     userId: string,
     bookingType: string,
+    date:string,
     address: {
       name: string;
       address: string;

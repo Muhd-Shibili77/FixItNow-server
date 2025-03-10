@@ -96,5 +96,15 @@ export class WorkerUseCase{
         return job
     }
 
+    async toggleWorkStatus(bookingId:string,workStatus:string){
+        await this.WorkerRepository.toggleWorkStatus(bookingId,workStatus)
+    }
+    async toggleReachStatus(bookingId:string,reachStatus:string){
+        await this.WorkerRepository.toggleReachStatus(bookingId,reachStatus)
+    }
+    async updateAmount(bookingId:string,amount:string){
+        await this.WorkerRepository.updateAmount(bookingId,amount)
+    }
+
 
 }

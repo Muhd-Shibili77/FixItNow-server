@@ -42,8 +42,8 @@ export class UserController {
 
   async bookWorker(req:Request,res:Response){
     try {
-        const {bookingType,workerId,userId,bookAddress} = req.body
-        const response = await this.userUseCase.bookWorker(bookingType,workerId,userId,bookAddress);
+        const {bookingType,date,workerId,userId,bookAddress} = req.body
+        const response = await this.userUseCase.bookWorker(bookingType,date,workerId,userId,bookAddress);
         res.json({
             success: true,
             message: "worker booked successfull",

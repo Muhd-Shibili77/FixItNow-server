@@ -18,7 +18,7 @@ export enum WorkStatus {
   }
   export enum BookingType {
     INSTANT = 'instant',
-    SCHEDULED = 'scheduled',
+    SCHEDULED = 'schedule',
   }
 
 
@@ -26,11 +26,13 @@ export interface IBooking extends Document {
   workerId: string;
   serviceId: string;
   amount: number;
+  paymentStatus: boolean;
   userId: string;
   bookingNo:string,
   workStatus: boolean;
   reachingStatus: string;
   bookingType: string;
+  date: string;
   address: {
     pincode: number;
     state: string;
@@ -48,7 +50,8 @@ const bookingSchema: Schema = new Schema({
     placedAt: { type: Date, required: true },
     workerId: { type: Schema.Types.ObjectId, required: true, ref: "Workers" },
     serviceId: { type: Schema.Types.ObjectId, required: true, ref: "Service" },
-    amount: { type: Number, required: true, default: 0 },
+    amount: { type: Number },
+    paymentStatus:{ type: Boolean,default:false },
     userId: { type: Schema.Types.ObjectId, required: true, ref: "Users" },
     workStatus: {
       type: String,
@@ -63,6 +66,7 @@ const bookingSchema: Schema = new Schema({
       default: ReachingStatus.NOT_STARTED,
     },
     bookingType: { type: String, required: true, enum: Object.values(BookingType) },
+    date: { type: String},
     bookingNo: { type: String, required: true, },
  
     address: {
@@ -75,7 +79,7 @@ const bookingSchema: Schema = new Schema({
       country: { type: String, required: true },
     },
   
-    isAccepted: { type: Boolean, required: true, default: false },
+    isAccepted: { type: Boolean },
   });
   
   

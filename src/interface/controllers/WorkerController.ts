@@ -165,5 +165,63 @@ export class WorkerController{
         }
     }
 
+    async toggleWorkStatus(req:Request,res:Response){
+        try {
+            const bookingId = req.query.bookingId as string | undefined;
+            const workStatus = req.query.workStatus as string | undefined;
+
+            if(!bookingId || !workStatus){
+                return res.status(400).json({success:false,message: "Missing bookingId or workStatus"})
+            }
+            await this.WorkerUseCase.toggleWorkStatus(bookingId,workStatus)
+            return res.json({
+                success: true,
+                message: "work status updated successfull",
+            });
+            
+        } catch (error:any) {
+            console.error("toggle work status Error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+    async toggleReachStatus(req:Request,res:Response){
+        try {
+            const bookingId = req.query.bookingId as string | undefined;
+            const reachStatus = req.query.reachStatus as string | undefined;
+
+            if(!bookingId || !reachStatus){
+                return res.status(400).json({success:false,message: "Missing bookingId or reachStatus"})
+            }
+            await this.WorkerUseCase.toggleReachStatus(bookingId,reachStatus)
+            return res.json({
+                success: true,
+                message: "reach status updated successfull",
+            });
+            
+        } catch (error:any) {
+            console.error("toggle reach status Error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+    async updateAmount(req:Request,res:Response){
+        try {
+            const bookingId = req.query.bookingId as string | undefined;
+            const amount = req.query.amount as string | undefined;
+
+            if(!bookingId || !amount){
+                return res.status(400).json({success:false,message: "Missing bookingId or amount"})
+            }
+            await this.WorkerUseCase.updateAmount(bookingId,amount)
+            return res.json({
+                success: true,
+                message: "amount updated successfull",
+            });
+            
+        } catch (error:any) {
+            console.error("amount updating Error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
 
 }

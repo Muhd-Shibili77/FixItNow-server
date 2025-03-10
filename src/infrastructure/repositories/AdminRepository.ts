@@ -50,7 +50,31 @@ export class AdminRespository implements IAdminRepository {
 
 
    async fetchWorkers(query: Record<string, any>, pageNumber: number, pageSize: number): Promise<{workers:Partial<Worker>[],totalPages:number}> {
+   
     
+    if (Object.keys(query).length === 0 && pageNumber===0 && pageSize==0) { 
+
+     
+      const workers = await WorkerModel.find().populate('service', 'name');
+      
+      return {
+        workers: workers.map(worker => ({
+          id: worker.id,
+          name: worker.name,
+          email: worker.email,
+          isBlock: worker.isBlock,
+          experience: worker.experience,
+          service: worker.service,
+          phone: worker.phone,
+          about: worker.about,
+          profileImage:worker.profileImage
+        }) as Partial<Worker>),
+        totalPages: 1, 
+      };
+
+    }
+
+   
     const totalCount = await UserModel.countDocuments(query);
     const totalPages = Math.ceil(totalCount / pageSize);   
     const worker = await WorkerModel.find(query).populate('service','name')

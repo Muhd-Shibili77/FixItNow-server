@@ -28,6 +28,15 @@ router.get('/getJob',authenticateJWT(['Worker']),async (req:Request,res:Response
 router.put('/updateJob',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.updateJob(req,res)
 })
+router.patch('/updateWork',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
+    await workerController.toggleWorkStatus(req,res)
+})
+router.patch('/updateReach',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
+    await workerController.toggleReachStatus(req,res)
+})
+router.patch('/updateAmount',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
+    await workerController.updateAmount(req,res)
+})
 
 
 

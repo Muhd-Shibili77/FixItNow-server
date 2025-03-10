@@ -71,10 +71,13 @@ export class WorkerRepository implements IWorkerRepository{
             serviceId: booking.serviceId,
             userId: booking.userId,
             bookingType: booking.bookingType,
+            date: booking.date,
             workStatus: booking.workStatus,
             reachingStatus: booking.reachingStatus,
             isAccepted: booking.isAccepted,
             amount: booking.amount,
+            paymentStatus:booking.paymentStatus,
+            bookingNo:booking.bookingNo,
             address: {
                 name: booking.address.name,
                 address: booking.address.address,
@@ -95,7 +98,7 @@ export class WorkerRepository implements IWorkerRepository{
             { 
                 $set: { 
                     isAccepted: isAccepted,
-                    workStatus: isAccepted ? WorkStatus.PENDING : WorkStatus.REJECTED // Ensuring logical status change
+                    workStatus: isAccepted ? WorkStatus.PENDING : WorkStatus.REJECTED 
                 } 
             }
         ).populate("userId", "username phone");
@@ -104,5 +107,16 @@ export class WorkerRepository implements IWorkerRepository{
             return null;
         }
        
+    }
+
+    async toggleWorkStatus(bookingId: string, workStatus: string): Promise<void> {
+        await bookingModel.findByIdAndUpdate(bookingId,{workStatus:workStatus})
+    }
+
+    async toggleReachStatus(bookingId: string, reachStatus: string): Promise<void> {
+        await bookingModel.findByIdAndUpdate(bookingId,{reachingStatus:reachStatus})
+    }
+    async updateAmount(bookingId: string, amount: string): Promise<void> {
+        await bookingModel.findByIdAndUpdate(bookingId,{amount:amount})
     }
 }

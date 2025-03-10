@@ -20,7 +20,7 @@ router.patch('/users',async(req:Request,res:Response):Promise<void>=>{
     await adminController.toggleBlockUser(req,res)
 })
 
-router.get('/workers',authenticateJWT(['Admin']),async(req:Request,res:Response):Promise<void>=>{
+router.get('/workers',authenticateJWT(['Admin','User']),async(req:Request,res:Response):Promise<void>=>{
     await adminController.fetchWorkers(req,res)
 })
 

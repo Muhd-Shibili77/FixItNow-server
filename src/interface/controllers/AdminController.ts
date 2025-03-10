@@ -46,8 +46,8 @@ export class AdminController{
     async fetchWorkers(req:Request,res:Response){
         try {
             const search: string = (req.query.search as string) || "";
-          const page: number = parseInt(req.query.page as string) || 1;
-          const limit: number = parseInt(req.query.limit as string) || 10;
+          const page: number = parseInt(req.query.page as string) || 0;
+          const limit: number = parseInt(req.query.limit as string) || 0;
           
 
           const query = search ? { name: { $regex: search, $options: "i" } } : {};

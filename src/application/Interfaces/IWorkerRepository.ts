@@ -7,4 +7,7 @@ export interface IWorkerRepository{
     getWorker(query: Record<string, any>, pageNumber: number, pageSize: number): Promise<{ workers: Worker[], totalPages: number }>
     getJob(workerId:string):Promise<Booking[]|null>;
     updateJob(jobId:string,isAccepted:boolean):Promise<void | null>
+    toggleWorkStatus(bookingId:string,workStatus:string):Promise<void>
+    toggleReachStatus(bookingId:string,reachStatus:string):Promise<void>
+    updateAmount(bookingId:string,amount:string):Promise<void>
 }

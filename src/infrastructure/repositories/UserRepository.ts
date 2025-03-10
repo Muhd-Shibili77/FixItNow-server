@@ -104,6 +104,7 @@ export class UserRepository implements IUserRepository {
   serviceId: string,
   userId: string,
   bookingType: string,
+  date:string,
   address: {
     name: string;
     address: string;
@@ -123,6 +124,7 @@ export class UserRepository implements IUserRepository {
     serviceId,
     userId,
     bookingType,
+    date,
     address,
     bookingNo, 
   });
@@ -135,10 +137,12 @@ export class UserRepository implements IUserRepository {
     serviceId: String(createBooking.serviceId),
     userId: String(createBooking.userId),
     bookingType: createBooking.bookingType,
+    date: createBooking.date,
     workStatus: createBooking.workStatus,
     reachingStatus: createBooking.reachingStatus,
     isAccepted: createBooking.isAccepted,
     amount: createBooking.amount,
+    paymentStatus:createBooking.paymentStatus,
     address: {
       name: createBooking.address.name,
       address: createBooking.address.address,
@@ -164,11 +168,13 @@ async findBookings(userId: string): Promise<Booking[] | null> {
       serviceId: booking.serviceId,
       userId: booking.userId,
       bookingType: booking.bookingType,
+      date: booking.date,
       bookingNo:booking.bookingNo,
       workStatus: booking.workStatus,
       reachingStatus: booking.reachingStatus,
       isAccepted: booking.isAccepted,
       amount: booking.amount,
+      paymentStatus:booking.paymentStatus,
       address: {
           name: booking.address.name,
           address: booking.address.address,

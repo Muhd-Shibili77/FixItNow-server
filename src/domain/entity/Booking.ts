@@ -6,12 +6,14 @@ class Booking {
   public serviceId!: string;
   public bookingNo!:string;
   public amount!: number;
+  public paymentStatus!: boolean;
   public userId!: string;
   public workStatus!: boolean;
   public reachingStatus!: string;
   public bookingType!: string;
+  public date!: string;
   public address!: {
-    id?: string; // Optional, since MongoDB generates `_id`
+    id?: string; 
     name: string;
     address: string;
     city: string;
