@@ -4,6 +4,8 @@ import Worker from "../../domain/entity/Worker";
 import Booking from "../../domain/entity/Booking";
 import bookingModel from "../models/bookModel";
 import { WorkStatus } from "../models/bookModel";  // Adjust path if needed
+import Wallet from "../../domain/entity/Wallet";
+import walletModel from "../models/walletModel";
 
 export class WorkerRepository implements IWorkerRepository{
 
@@ -119,4 +121,29 @@ export class WorkerRepository implements IWorkerRepository{
     async updateAmount(bookingId: string, amount: string): Promise<void> {
         await bookingModel.findByIdAndUpdate(bookingId,{amount:amount})
     }
-}
+
+    async getWallet(workerId: string): Promise<Wallet | null> {
+
+        let wallet = await walletModel.findOne({worker:workerId})
+
+        if(!wallet){
+            wallet = new walletModel({
+                worker:workerId,
+                balanceAmount:0,
+                walletHistory:[],
+            })
+        }
+        await wallet.save()
+        return {
+            id:wallet.id,
+            worker:wallet.worker,
+            balanceAmount:wallet.balanceAmount,
+            walletHistory:wallet.walletHistory.map((r)=>({
+                date:r.date,
+                amount:r.amount,
+                description:r.description,
+                transactionType:r.transactionType
+            }))
+
+        }
+    }}

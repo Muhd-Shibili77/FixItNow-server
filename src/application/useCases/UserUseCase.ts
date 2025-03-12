@@ -1,8 +1,16 @@
 import Address from "../../domain/entity/Address";
 import Booking from "../../domain/entity/Booking";
 import { IUserRepository } from "../Interfaces/IUserRepository";
+import Stripe from "stripe";
+import dotenv from "dotenv";
 
+dotenv.config();
 
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is missing from environment variables");
+  }
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export class UserUseCase{
     constructor(private userRepository : IUserRepository){}
@@ -96,5 +104,36 @@ export class UserUseCase{
             return null
         }
         return bookings
+    }
+
+    async createPayment(bookingId:string,bookingNO:string,amount:number,user:string,address:any){
+        
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount:(amount + 40)*100,
+            currency:'inr',
+            metadata:{bookingId},
+            description:`Payment for booking ${bookingNO}`,
+            shipping:{
+                name:user,
+                address:{
+                    line1:address.address,
+                    city:address.city,
+                    state:address.state,
+                    postal_code:address.pincode,
+                    country:'IN',
+                }
+            }
+        });
+        return paymentIntent
+    }
+
+    async makePayment(bookingId:string,amount:number){
+        if(!bookingId){
+            throw new Error('bookingid is empty')
+        }
+        if(!amount){
+            throw new Error('amount is empty')
+        }
+        await this.userRepository.makePayment(bookingId,amount)
     }
 }

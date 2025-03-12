@@ -84,4 +84,45 @@ export class UserController {
     
 
   }
+
+  async createPaymentIntent(req:Request,res:Response){
+      try {
+        
+        const { amount, bookingId,bookingNO,user,address } = req.body;
+        
+        if (!amount || !bookingId || !bookingNO) {
+          return res.status(400).json({ error: "Amount and Booking ID or No are required" });
+       }
+       if(!user || !address){
+        return res.status(400).json({error:"user's name and user address are required"})
+       }
+       
+        const response = await this.userUseCase.createPayment(bookingId,bookingNO,amount,user,address)
+        res.json({ clientSecret: response.client_secret });
+      } catch (error:any) {
+        res.status(500).json({ error: error.message });
+      }
+  }
+
+  async makePayment(req:Request,res:Response){
+    try {
+      const {bookingId,amount}=req.body
+
+      if(!bookingId){
+        return res.status(400).json({error:"bookingId is empty"})
+      }
+      if(!amount){
+        return res.status(400).json({error:"amount is empty"})
+      }
+
+      await this.userUseCase.makePayment(bookingId,amount)
+      res.json({
+        success: true,
+        message: "payment is successfull",
+      });
+      
+    } catch (error:any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }

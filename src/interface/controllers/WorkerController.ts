@@ -223,5 +223,25 @@ export class WorkerController{
         }
     }
 
+        async getWallet(req:Request,res:Response){
+            try {
+                const workerId = req.query.workerId as string | undefined;
+
+                if(!workerId){
+                    return res.status(400).json({success:false,message: "Missing workerId "})
+                }
+
+                const response = await this.WorkerUseCase.getWallet(workerId) 
+                res.json({
+                    success: true,
+                    message: " fetching wallet successfull",
+                    response
+                  });
+            } catch (error:any) {
+                console.error("wallet fetching error:", error);
+                res.status(400).json({ success: false, message: error.message });
+            }
+        }
+
 
 }

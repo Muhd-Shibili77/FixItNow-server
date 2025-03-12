@@ -27,5 +27,11 @@ router.get('/getBookings',authenticateJWT(['User']),async (req: Request, res: Re
     await userController.getBookings(req, res);
 })
 
+router.post('/stripe/create-payment',async(req:Request,res:Response):Promise<void>=>{
+    await userController.createPaymentIntent(req,res)
+})
+router.post('/makePayment',async(req:Request,res:Response):Promise<void>=>{
+    await userController.makePayment(req,res)
+})
 
 export default router;

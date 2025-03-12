@@ -17,6 +17,7 @@ export const authenticateJWT = (allowedRoles:string[])=>{
     return  (req: AuthRequest, res: Response, next: NextFunction):void => {
         
         const token = req.header("Authorization")?.split(" ")[1];
+      
         
         
         if (!token) {

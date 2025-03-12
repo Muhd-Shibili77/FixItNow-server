@@ -29,4 +29,5 @@ export interface IUserRepository {
     }
   ): Promise<Booking>;
   findBookings(userId:string):Promise<Booking[] | null>
+  makePayment(bookingId:string,amount:number):Promise<void>
 }

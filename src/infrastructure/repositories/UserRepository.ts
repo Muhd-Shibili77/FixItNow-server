@@ -10,6 +10,8 @@ import ServiceModel from "../models/serviceModel";
 import Booking from "../../domain/entity/Booking";
 import bookingModel from "../models/bookModel";
 import CounterModel from "../models/counterModel";
+import walletModel from "../models/walletModel";
+import Wallet from "../../domain/entity/Wallet";
 
 async function generateBookingNo(){
 
@@ -155,7 +157,7 @@ export class UserRepository implements IUserRepository {
   });
 }
 async findBookings(userId: string): Promise<Booking[] | null> {
-  const bookings = await bookingModel.find({ userId: userId }).populate("serviceId", "name").populate('workerId',"name phone").sort({ placedAt: -1 });
+  const bookings = await bookingModel.find({ userId: userId }).populate("serviceId", "name").populate('workerId',"name phone").populate('userId','username').sort({ placedAt: -1 });
 
   if (!bookings.length) {
       return null;
@@ -184,9 +186,39 @@ async findBookings(userId: string): Promise<Booking[] | null> {
           country: booking.address.country,
           phone: booking.address.phone,
       },
-      
   }));
 }
 
+async makePayment(bookingId: string, amount: number): Promise<void> {
+
+    
+    const workerCharge = (amount/100)-40;
+    
+    
+    const booking = await bookingModel.findByIdAndUpdate(bookingId,{paymentStatus:true})
+    
+    if(!booking){
+      throw new Error('booking not found')
+    }
+    let wallet = await walletModel.findOne({worker:booking.workerId})
+    
+    if(!wallet){
+      wallet = new walletModel({
+        worker:booking.workerId,
+        balanceAmount:0,
+        walletHistory:[],
+      })
+    }
+    wallet.balanceAmount += workerCharge;
+    wallet.walletHistory.push({
+      date: new Date(),
+      amount:workerCharge,
+      description:`Service payment(${booking.bookingNo})`,
+      transactionType:'credited'
+    })
+
+    await wallet.save()
+
+}
 
 } 

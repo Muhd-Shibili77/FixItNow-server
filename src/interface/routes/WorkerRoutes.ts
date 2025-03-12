@@ -25,6 +25,9 @@ router.get('/getworker',authenticateJWT(['User']),async (req:Request,res:Respons
 router.get('/getJob',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.getJob(req,res)
 })
+router.get('/wallet',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
+    await workerController.getWallet(req,res)
+})
 router.put('/updateJob',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.updateJob(req,res)
 })

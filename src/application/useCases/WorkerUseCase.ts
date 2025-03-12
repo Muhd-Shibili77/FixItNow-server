@@ -1,5 +1,6 @@
 
 import Booking from "../../domain/entity/Booking";
+import Wallet from "../../domain/entity/Wallet";
 import Worker from "../../domain/entity/Worker";
 import { IWorkerRepository } from "../Interfaces/IWorkerRepository";
 
@@ -104,6 +105,14 @@ export class WorkerUseCase{
     }
     async updateAmount(bookingId:string,amount:string){
         await this.WorkerRepository.updateAmount(bookingId,amount)
+    }
+
+    async getWallet(workerId:string):Promise<Wallet | null>{
+        if(!workerId){
+            throw new Error('workerId is empty')
+        }
+        const wallet = await this.WorkerRepository.getWallet(workerId)
+        return wallet
     }
 
 
