@@ -102,7 +102,10 @@ export class WorkerController{
             name: worker.name,
             profileImage: worker.profileImage,
             experience:worker.experience,
-            service : worker.service
+            service : worker.service,
+            averageRating:worker.averageRating,
+            totalReviews:worker.totalReviews
+            
         }));
         
 

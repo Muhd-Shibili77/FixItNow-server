@@ -11,6 +11,8 @@ class Worker {
     public password?:string; 
     public conformpassword?:string; 
     public email?:string;
+    public averageRating?:number;
+    public totalReviews?:string;
     public isGoogleAuth?: boolean;
 
 

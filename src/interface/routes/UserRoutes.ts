@@ -33,5 +33,12 @@ router.post('/stripe/create-payment',async(req:Request,res:Response):Promise<voi
 router.post('/makePayment',async(req:Request,res:Response):Promise<void>=>{
     await userController.makePayment(req,res)
 })
+router.post('/review',async(req:Request,res:Response):Promise<void>=>{
+    await userController.rateReview(req,res)
+})
+router.get('/review',async(req:Request,res:Response):Promise<void>=>{
+    await userController.getReview(req,res)
+})
+
 
 export default router;

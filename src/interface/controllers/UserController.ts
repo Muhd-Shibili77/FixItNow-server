@@ -125,4 +125,41 @@ export class UserController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  async rateReview(req:Request,res:Response){
+    try {
+
+      const {user,worker,booking,rating,review} = req.body
+
+      await this.userUseCase.rateReview(user,worker,booking,rating,review)
+
+      res.json({
+        success: true,
+        message: "review successfully sent",
+      });
+      
+    } catch (error:any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async getReview(req:Request,res:Response){
+    try {
+
+      const workerId = req.query.workerId as string;
+
+      const response = await this.userUseCase.getReview(workerId)
+
+      res.json({
+        success: true,
+        message: "review successfully fetch",
+        response
+      });
+      
+    } catch (error:any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  
 }

@@ -43,6 +43,7 @@ export interface IBooking extends Document {
     city: string;
   };
   isAccepted: boolean;
+  isFeedback: boolean;
   placedAt: Date;
 }
 
@@ -80,6 +81,7 @@ const bookingSchema: Schema = new Schema({
     },
   
     isAccepted: { type: Boolean },
+    isFeedback:{type:Boolean,default:false}
   });
   
   

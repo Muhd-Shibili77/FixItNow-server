@@ -11,6 +11,8 @@ export interface IWorker extends Document{
     experience:number,
     about:string,
     profileImage:string,
+    averageRating:number,
+    totalReviews:string,
     isGoogleAuth?:boolean
     
 
@@ -49,6 +51,12 @@ const WorkerSchema:Schema = new Schema({
   },
   profileImage:{
     type:String,
+},
+averageRating:{
+  type:Number,default:0
+},
+totalReviews:{
+  type:String
 },
 isGoogleAuth:{
   type:Boolean ,required:true,default:false

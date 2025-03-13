@@ -34,7 +34,6 @@ export function initializeSocket(io:Server){
         socket.on('addReaction',async (data)=>{
             const {messageId,userId,receiverId,reaction}=data
             try {
-                console.log(data)
                 
                 io.to(receiverId).emit("reactionUpdated",{
                     messageId,

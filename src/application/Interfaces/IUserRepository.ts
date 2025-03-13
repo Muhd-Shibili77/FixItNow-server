@@ -3,6 +3,7 @@ import Service from "../../domain/entity/Service";
 import User from "../../domain/entity/User";
 import Worker from "../../domain/entity/Worker";
 import Booking from "../../domain/entity/Booking";
+import Review from "../../domain/entity/Review";
 
 export interface IUserRepository {
   addAddress(address: Address): Promise<Address>;
@@ -12,7 +13,6 @@ export interface IUserRepository {
   findWorkerById(WorkerId: string): Promise<Worker | null>;
   findServiceById(serviceId: string): Promise<Service | null>;
   bookAnWorker(
-    
     workerId: string,
     serviceId: string,
     userId: string,
@@ -30,4 +30,6 @@ export interface IUserRepository {
   ): Promise<Booking>;
   findBookings(userId:string):Promise<Booking[] | null>
   makePayment(bookingId:string,amount:number):Promise<void>
+  sentReview(user:string,worker:string,booking:string,rating:number,review:string):Promise<void>
+  getReview(workerId:string):Promise<Review[] | null>
 }

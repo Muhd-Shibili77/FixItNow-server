@@ -23,6 +23,7 @@ class Booking {
     phone: number;
   };
   public isAccepted!: boolean;
+  public isFeedback!: boolean;
   public placedAt!: Date;
 
   constructor(data: Partial<Booking>) {

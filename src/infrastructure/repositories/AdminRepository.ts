@@ -132,7 +132,10 @@ export class AdminRespository implements IAdminRepository {
           workStatus: booking.workStatus,
           reachingStatus: booking.reachingStatus,
           isAccepted: booking.isAccepted,
+          isFeedback: booking.isAccepted,
+          paymentStatus:booking.paymentStatus,
           amount: booking.amount,
+          date: booking.date,
           address: {
               name: booking.address.name,
               address: booking.address.address,

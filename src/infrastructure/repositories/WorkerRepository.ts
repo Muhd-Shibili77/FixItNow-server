@@ -48,6 +48,7 @@ export class WorkerRepository implements IWorkerRepository{
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize);
 
+          
             
         return {
             workers: workers.map(worker => new Worker({
@@ -55,7 +56,9 @@ export class WorkerRepository implements IWorkerRepository{
                 name: worker.name,
                 profileImage: worker.profileImage,
                 experience:worker.experience,
-                service : (worker.service as any)?.name
+                service : (worker.service as any)?.name,
+                averageRating:worker.averageRating,
+                totalReviews:worker.totalReviews
             })),
             totalPages
         };
@@ -77,6 +80,7 @@ export class WorkerRepository implements IWorkerRepository{
             workStatus: booking.workStatus,
             reachingStatus: booking.reachingStatus,
             isAccepted: booking.isAccepted,
+            isFeedback: booking.isAccepted,
             amount: booking.amount,
             paymentStatus:booking.paymentStatus,
             bookingNo:booking.bookingNo,
@@ -144,6 +148,5 @@ export class WorkerRepository implements IWorkerRepository{
                 description:r.description,
                 transactionType:r.transactionType
             }))
-
         }
     }}

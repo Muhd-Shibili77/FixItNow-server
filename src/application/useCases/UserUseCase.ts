@@ -3,6 +3,7 @@ import Booking from "../../domain/entity/Booking";
 import { IUserRepository } from "../Interfaces/IUserRepository";
 import Stripe from "stripe";
 import dotenv from "dotenv";
+import Review from "../../domain/entity/Review";
 
 dotenv.config();
 
@@ -135,5 +136,35 @@ export class UserUseCase{
             throw new Error('amount is empty')
         }
         await this.userRepository.makePayment(bookingId,amount)
+    }
+
+    async rateReview(user: string, worker: string, booking: string, rating: number, review: string){
+        if(!user){
+            throw new Error('user id is empty')
+        }
+        if(!worker){
+            throw new Error('worker id is empty')
+        }
+        if(!booking){
+            throw new Error('booking id is empty')
+        }
+        if(!rating){
+            throw new Error('rating is empty')
+        }
+        if(!review){
+            throw new Error('review is empty')
+        }
+        await this.userRepository.sentReview(user,worker,booking,rating,review)
+        
+    }
+
+    async getReview(workerId:string):Promise<Review[] | null>{
+        if(!workerId){
+            throw new Error("workerId is empty")
+        }
+
+        const review = await this.userRepository.getReview(workerId)
+
+        return review
     }
 }

@@ -12,6 +12,8 @@ import bookingModel from "../models/bookModel";
 import CounterModel from "../models/counterModel";
 import walletModel from "../models/walletModel";
 import Wallet from "../../domain/entity/Wallet";
+import reviewModel from "../models/reviewModel";
+import Review from "../../domain/entity/Review";
 
 async function generateBookingNo(){
 
@@ -175,6 +177,7 @@ async findBookings(userId: string): Promise<Booking[] | null> {
       workStatus: booking.workStatus,
       reachingStatus: booking.reachingStatus,
       isAccepted: booking.isAccepted,
+      isFeedback: booking.isFeedback,
       amount: booking.amount,
       paymentStatus:booking.paymentStatus,
       address: {
@@ -219,6 +222,41 @@ async makePayment(bookingId: string, amount: number): Promise<void> {
 
     await wallet.save()
 
+}
+
+async sentReview(user: string, worker: string, booking: string, rating: number, review: string): Promise<void> {
+    const job = await bookingModel.findById(booking,{workStatus:'Completed',paymentStatus:true})
+    if(!job){
+      throw new Error('booking is not available!')
+    }
+    const rateReview = await reviewModel.create({
+      user,
+      worker,
+      booking,
+      rating,
+      review
+    })
+
+    const reviews = await reviewModel.find({worker:worker})
+    const totalReviews = reviews.length;
+    const avgRating = reviews.reduce((sum,b)=> sum + b.rating ,0) / totalReviews;
+    await WorkerModel.findByIdAndUpdate(worker,{averageRating:avgRating,totalReviews})
+    job.isFeedback = true
+    await job.save()
+    return
+}
+
+async getReview(workerId: string): Promise<Review[] | null> {
+    const reviews = await reviewModel.find({worker:workerId}).populate('user','username')
+    
+    return reviews.map((review)=> new Review({
+        id:review.id,
+        user:review.user,
+        worker:review.worker,
+        booking:review.booking,
+        rating:review.rating,
+        review:review.review
+    }))
 }
 
 } 
