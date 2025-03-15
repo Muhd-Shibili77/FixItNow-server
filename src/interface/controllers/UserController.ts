@@ -161,5 +161,87 @@ export class UserController {
     }
   }
 
+  async userInfo (req:Request,res:Response){
+
+    try {
+
+      const userId = req.query.id as string;
+
+      const response = await this.userUseCase.userInfo(userId)
+  
+      res.json({
+        success:true,
+        message:'User data fetched successfull',
+        response
+      })
+      
+    } catch (error:any) {
+      res.status(500).json({ error: error.message });
+    }
+   
+  }
+
+  async updateUser (req:Request,res:Response){
+    try {
+
+      const userId = req.query.id as string;
+      const {username,profileImage} = req.body;
+      const phone = parseInt(req.body.phone)  
+     
+      const response = await this.userUseCase.updateUserInfo(userId,username,phone,profileImage)
+      res.json({
+        success:true,
+        message:'User data updated successfull',
+        response
+      })
+      
+    } catch (error:any) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  async uploadProfile(req:Request,res:Response){
+    try {
+      if(!req.file){
+        throw new Error('file is missing')
+      }
+      res.json({url:req.file.path})
+      
+    } catch (error) {
+      console.error('Upload error:', error);
+      res.status(500).json({ message: 'File upload failed' });
+  }
+  }
+
+  async updateUserPassword(req:Request,res:Response){
+
+    try {
+      const userId = req.query.userId as string;
+     
+      const {currentPassword,newPassword} = req.body;
+
+      await this.userUseCase.updateUserPassword(userId,newPassword,currentPassword)
+      res.json({
+        success:true,
+        message:'User data updated successfull',
+      })
+      
+    } catch (error) {
+      console.error('Password update error:', error);
+      if (error instanceof Error) {
+        return res.status(400).json({ 
+          success: false, 
+          message: error.message 
+        });
+      }
+      
+      // Generic error
+      res.status(500).json({ 
+        success: false, 
+        message: 'Password update failed' 
+      });
+     }
+  }
+
   
 }

@@ -7,6 +7,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
     phone?:number,
     isBlock?:boolean,
     isGoogleAuth?:boolean
+    profileImage?:string
 }
 
 const UsersSchema:Schema<IUser> = new Schema({
@@ -27,8 +28,10 @@ const UsersSchema:Schema<IUser> = new Schema({
   },
   isGoogleAuth:{
    type:Boolean ,required:true,default:false
+  },
+  profileImage:{
+    type:String
   }
-
 });
 
 const UserModel:Model<IUser> = mongoose.model<IUser>("Users", UsersSchema);

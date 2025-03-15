@@ -2,8 +2,8 @@ import { Router, Request, Response } from "express";
 import { UserController } from "../controllers/UserController";
 import { UserRepository } from "../../infrastructure/repositories/UserRepository";
 import { UserUseCase } from "../../application/useCases/UserUseCase";
-import Booking from "../../domain/entity/Booking";
 import { authenticateJWT } from "../middlewares/authMiddleware";
+import profileUpload from "../../infrastructure/config/userProfileStorage";
 
 const userRepository = new UserRepository();
 const userUseCase = new UserUseCase(userRepository);
@@ -38,6 +38,18 @@ router.post('/review',async(req:Request,res:Response):Promise<void>=>{
 })
 router.get('/review',async(req:Request,res:Response):Promise<void>=>{
     await userController.getReview(req,res)
+})
+router.get('/userInfo',async(req:Request,res:Response):Promise<void>=>{
+    await userController.userInfo(req,res)
+})
+router.post('/upload',profileUpload.single('file'),async(req:Request,res:Response):Promise<void>=>{
+    await userController.uploadProfile(req,res)
+})
+router.put('/update',async(req:Request,res:Response):Promise<void>=>{
+    await userController.updateUser(req,res)
+})
+router.patch('/updatePassword',async(req:Request,res:Response):Promise<void>=>{
+    await userController.updateUserPassword(req,res)
 })
 
 

@@ -259,4 +259,25 @@ async getReview(workerId: string): Promise<Review[] | null> {
     }))
 }
 
+async userInfo(userId: string): Promise<User | null> {
+  const user = await UserModel.findById(userId)
+  return user
+}
+async updateUser(userId: string, username: string, phone: number, profileImage: string): Promise<User> {
+  
+    const updatedUser = await UserModel.findByIdAndUpdate(userId,
+      { username, phone, profileImage },
+      { new: true }
+    );
+    if(!updatedUser){
+      throw new Error('Error in updating user data')
+    }
+    return updatedUser
+}
+
+async updateUserPassword(userId: string, newPassword: string): Promise<void> {
+    await UserModel.findByIdAndUpdate(userId,{password:newPassword})
+
+}
+
 } 

@@ -1,9 +1,11 @@
+import bcrypt from "bcrypt";
 import Address from "../../domain/entity/Address";
 import Booking from "../../domain/entity/Booking";
 import { IUserRepository } from "../Interfaces/IUserRepository";
 import Stripe from "stripe";
 import dotenv from "dotenv";
 import Review from "../../domain/entity/Review";
+import User from "../../domain/entity/User";
 
 dotenv.config();
 
@@ -166,5 +168,49 @@ export class UserUseCase{
         const review = await this.userRepository.getReview(workerId)
 
         return review
+    }
+
+    async userInfo(userId:string):Promise<User | null>{
+        if(!userId){
+            throw new Error('user id is empty')
+        }
+        const userInfo = await this.userRepository.userInfo(userId)
+        return userInfo
+    }
+
+    async updateUserInfo(userId:string,username:string,phone:number,profileImage:string){
+        if(!userId){
+            throw new Error('user id is empty')
+        }
+        
+        const updatedUser = await this.userRepository.updateUser(userId,username,phone,profileImage)
+        return updatedUser
+    }
+
+    async updateUserPassword(userId:string,newPassword:string,currentPassword:string){
+        if(!userId){
+            throw new Error('user id is not provided')
+        }
+        const user = await this.userRepository.userInfo(userId)
+        if(!user){
+            throw new Error('user not found')
+        }
+        const isPasswordCorrect = await bcrypt.compare(
+            currentPassword,
+            user.password
+        )
+        if(!isPasswordCorrect){
+            throw new Error('incorrect current password,try again!')
+        }
+        const samePassword = await bcrypt.compare(
+            newPassword,
+            user.password
+        )
+        if(samePassword){
+            throw new Error('new password is same as current password!')
+        }
+        const hashedPassword = await bcrypt.hash(newPassword,10);
+        await this.userRepository.updateUserPassword(userId,hashedPassword)
+        return
     }
 }

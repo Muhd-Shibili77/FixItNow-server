@@ -8,6 +8,7 @@ class User {
     public isBlock?:boolean;
     public conformpassword?: string;
     public isGoogleAuth?: boolean;
+    public profileImage?:string;
 
     constructor(data:Partial<User>){
         Object.assign(this,data);

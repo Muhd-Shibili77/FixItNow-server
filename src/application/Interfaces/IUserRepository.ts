@@ -32,4 +32,7 @@ export interface IUserRepository {
   makePayment(bookingId:string,amount:number):Promise<void>
   sentReview(user:string,worker:string,booking:string,rating:number,review:string):Promise<void>
   getReview(workerId:string):Promise<Review[] | null>
+  userInfo(userId:string):Promise<User | null>
+  updateUser(userId:string,username:string,phone:number,profileImage:string):Promise<User>
+  updateUserPassword(userId:string,newPassword:string):Promise<void>
 }
