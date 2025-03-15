@@ -42,8 +42,8 @@ export class UserController {
 
   async bookWorker(req:Request,res:Response){
     try {
-        const {bookingType,date,workerId,userId,bookAddress} = req.body
-        const response = await this.userUseCase.bookWorker(bookingType,date,workerId,userId,bookAddress);
+        const {bookingType,date,workerId,userId,bookAddress,userLocation} = req.body
+        const response = await this.userUseCase.bookWorker(bookingType,date,workerId,userId,bookAddress,userLocation);
         res.json({
             success: true,
             message: "worker booked successfull",
@@ -235,12 +235,33 @@ export class UserController {
         });
       }
       
-      // Generic error
+      
       res.status(500).json({ 
         success: false, 
         message: 'Password update failed' 
       });
      }
+  }
+
+  async getLocation(req:Request,res:Response){
+    try {
+      const bookingId = req.query.bookingId as string;
+      
+      const booking = await this.userUseCase.userLocation(bookingId)
+      
+      if(!booking || !booking.userLocation){
+        throw new Error('location not found')
+      }
+      res.json({
+        success:true,
+        message:'User data updated successfull',
+        userLocation: booking.userLocation,
+      })
+
+    }  catch (error) {
+      console.error('location error:', error);
+      res.status(500).json({ message: 'location fetching failed' });
+  }
   }
 
   

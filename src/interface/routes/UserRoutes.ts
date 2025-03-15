@@ -51,6 +51,9 @@ router.put('/update',async(req:Request,res:Response):Promise<void>=>{
 router.patch('/updatePassword',async(req:Request,res:Response):Promise<void>=>{
     await userController.updateUserPassword(req,res)
 })
+router.get('/userLocation',async(req:Request,res:Response)=>{
+    await userController.getLocation(req,res)
+})
 
 
 export default router;

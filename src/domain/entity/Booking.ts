@@ -25,6 +25,10 @@ class Booking {
   public isAccepted!: boolean;
   public isFeedback!: boolean;
   public placedAt!: Date;
+  public userLocation?:{
+    latitude?:number;
+    longitude?:number;
+  }
 
   constructor(data: Partial<Booking>) {
     Object.assign(this, data);

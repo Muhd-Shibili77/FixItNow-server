@@ -44,10 +44,14 @@ export class UserUseCase{
         return address
     }
 
-    async bookWorker(bookingType:string,date:string,workerId:string,userId:string,bookAddress:string):Promise<Booking>{
-        if(!bookAddress || !bookingType || !workerId || !userId){
+    async bookWorker(bookingType:string,date:string,workerId:string,userId:string,bookAddress:string,userLocation:string):Promise<Booking>{
+        if(!bookAddress || !bookingType || !workerId || !userId || !userLocation){
             throw new Error("All fields are required");
         }
+        // if (!userLocation || !userLocation.latitude || !userLocation.longitude) {
+        //     throw new Error("Location is required");
+        //   }
+        console.log(typeof userLocation)
         const findAddress = await this.userRepository.findAddressById(bookAddress)
         if(!findAddress){
             throw new Error('Address not found')
@@ -84,7 +88,7 @@ export class UserUseCase{
         }
         
 
-       const bookAnWorker = await this.userRepository.bookAnWorker(workerId,service_id,userId,bookingType,date,addressArray)
+       const bookAnWorker = await this.userRepository.bookAnWorker(workerId,service_id,userId,bookingType,date,addressArray,userLocation)
        if(!bookAnWorker){
          throw new Error('failed to book')
         }
@@ -212,5 +216,13 @@ export class UserUseCase{
         const hashedPassword = await bcrypt.hash(newPassword,10);
         await this.userRepository.updateUserPassword(userId,hashedPassword)
         return
+    }
+
+    async userLocation(bookingId:string){
+        if(!bookingId){
+            throw new Error('bookingId is not provided')
+        }
+        const booking = await this.userRepository.getLocation(bookingId)
+        return booking
     }
 }

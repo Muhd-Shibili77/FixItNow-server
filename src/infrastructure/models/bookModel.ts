@@ -45,6 +45,10 @@ export interface IBooking extends Document {
   isAccepted: boolean;
   isFeedback: boolean;
   placedAt: Date;
+  userLocation:{
+    latitude:number,
+    longitude:number
+  }
 }
 
 const bookingSchema: Schema = new Schema({
@@ -81,7 +85,11 @@ const bookingSchema: Schema = new Schema({
     },
   
     isAccepted: { type: Boolean },
-    isFeedback:{type:Boolean,default:false}
+    isFeedback:{type:Boolean,default:false},
+    userLocation:{
+      latitude:{type:Number},
+      longitude:{type:Number}
+    }
   });
   
   

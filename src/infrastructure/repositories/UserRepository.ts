@@ -117,7 +117,8 @@ export class UserRepository implements IUserRepository {
     pincode: number;
     country: string;
     phone: number;
-  }
+  },
+  userLocation:string
 ): Promise<Booking> {
 
   const bookingNo = await generateBookingNo()
@@ -130,7 +131,8 @@ export class UserRepository implements IUserRepository {
     bookingType,
     date,
     address,
-    bookingNo, 
+    bookingNo,
+    userLocation, 
   });
 
   return new Booking({
@@ -156,6 +158,10 @@ export class UserRepository implements IUserRepository {
       country: createBooking.address.country,
       phone: createBooking.address.phone,
     },
+    userLocation:{
+      latitude:createBooking.userLocation.latitude,
+      longitude:createBooking.userLocation.longitude
+    }
   });
 }
 async findBookings(userId: string): Promise<Booking[] | null> {
@@ -278,6 +284,23 @@ async updateUser(userId: string, username: string, phone: number, profileImage: 
 async updateUserPassword(userId: string, newPassword: string): Promise<void> {
     await UserModel.findByIdAndUpdate(userId,{password:newPassword})
 
+}
+async getLocation(bookingId: string): Promise<Booking | null> {
+   const booking = await bookingModel.findById(bookingId)
+
+   if(!booking){
+    throw new Error('booking not found')
+   }
+
+   return new Booking({
+      id: String(booking._id),
+      bookingNo:String(booking.bookingNo),
+      placedAt: booking.placedAt,
+      userLocation:{
+        latitude:booking.userLocation.latitude,
+        longitude:booking.userLocation.longitude
+      }
+   });
 }
 
 } 

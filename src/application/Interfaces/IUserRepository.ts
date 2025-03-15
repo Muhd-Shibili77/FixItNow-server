@@ -26,7 +26,8 @@ export interface IUserRepository {
       pincode: number;
       country: string;
       phone: number;
-    }
+    },
+    userLocation:string
   ): Promise<Booking>;
   findBookings(userId:string):Promise<Booking[] | null>
   makePayment(bookingId:string,amount:number):Promise<void>
@@ -35,4 +36,5 @@ export interface IUserRepository {
   userInfo(userId:string):Promise<User | null>
   updateUser(userId:string,username:string,phone:number,profileImage:string):Promise<User>
   updateUserPassword(userId:string,newPassword:string):Promise<void>
+  getLocation(bookingId:string):Promise<Booking | null>
 }
