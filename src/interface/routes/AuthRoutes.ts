@@ -42,6 +42,9 @@ router.post('/google/register-user', async (req: Request, res: Response): Promis
 router.post('/google/register-worker',upload.single('image'), async (req: Request, res: Response): Promise<void> => {
     await authController.googleCreateWorker(req, res);
 });
+router.post('/refresh-token',async(req:Request,res:Response):Promise<void>=>{
+    await authController.refreshAccessToken(req,res)
+})
 
 
 

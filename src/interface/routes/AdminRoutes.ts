@@ -34,5 +34,11 @@ router.get('/bookings',authenticateJWT(['Admin']),async(req:Request,res:Response
 router.patch('/bookings',async(req:Request,res:Response):Promise<void>=>{
     await adminController.toggleCancelBooking(req,res)
 })
+router.get('/dashboard',async(req:Request,res:Response):Promise<void>=>{
+    await adminController.fetchDashboardData(req,res)
+})
+router.get('/chartData',async(req:Request,res:Response):Promise<void>=>{
+    await adminController.fetchChartData(req,res)
+})
 
 export default router;

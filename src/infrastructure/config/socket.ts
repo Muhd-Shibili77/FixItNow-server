@@ -12,6 +12,7 @@ export function initializeSocket(io:Server){
 
         socket.on('joinRoom', (userId) => {
             socket.join(userId); 
+            console.log('user joined the room :',userId)
         });
 
         socket.on('sendMessage',async (data)=>{
@@ -20,7 +21,6 @@ export function initializeSocket(io:Server){
             
             io.to(receiver).emit('receiveMessage',data)
             const savedMessage = await messageUseCase.saveMessage(sender,senderModel,receiver,receiverModel,message)
-            
             
         })
 

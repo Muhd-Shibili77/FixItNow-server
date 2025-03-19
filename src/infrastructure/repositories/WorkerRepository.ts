@@ -6,6 +6,14 @@ import bookingModel from "../models/bookModel";
 import { WorkStatus } from "../models/bookModel";  // Adjust path if needed
 import Wallet from "../../domain/entity/Wallet";
 import walletModel from "../models/walletModel";
+import Stripe from "stripe";
+import dotenv from "dotenv";
+dotenv.config();
+
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is missing from environment variables");
+  }
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export class WorkerRepository implements IWorkerRepository{
 
@@ -128,8 +136,7 @@ export class WorkerRepository implements IWorkerRepository{
 
     async getWallet(workerId: string): Promise<Wallet | null> {
 
-        let wallet = await walletModel.findOne({worker:workerId})
-
+        let wallet = await walletModel.findOne({worker:workerId}).populate("worker")
         if(!wallet){
             wallet = new walletModel({
                 worker:workerId,
@@ -138,15 +145,53 @@ export class WorkerRepository implements IWorkerRepository{
             })
         }
         await wallet.save()
-        return {
-            id:wallet.id,
-            worker:wallet.worker,
-            balanceAmount:wallet.balanceAmount,
-            walletHistory:wallet.walletHistory.map((r)=>({
-                date:r.date,
-                amount:r.amount,
-                description:r.description,
-                transactionType:r.transactionType
-            }))
+        return wallet.toObject() as Wallet;
+    }
+    async createStripeAccount(userId: string): Promise<void> {
+        let worker = await WorkerModel.findById(userId)
+        
+        if (!worker) {
+            throw new Error("Worker not found");
         }
-    }}
+        if (!worker.email) {
+            throw new Error("Worker email is missing. Cannot create Stripe account.");
+        }
+        if (worker?.stripeAccountId) {
+            throw new Error('worker already have stripe account')
+        }
+       
+        try {
+            const account = await stripe.accounts.create({
+                type: "standard",
+                country: "IN", 
+                email: worker?.email,
+            });
+            
+            worker.stripeAccountId = account.id;
+            await worker.save();
+        } catch (error) {
+            console.error("Stripe Error:", error);
+            throw new Error("Failed to create Stripe account.");
+        }
+          return
+    }
+     
+
+    async testPayout(userId: string): Promise<void> {
+        const wallet = await walletModel.findOne({worker:userId})
+        if(wallet){
+            const amount = wallet.balanceAmount;
+            wallet.balanceAmount -= amount
+            wallet.walletHistory.push({
+                date: new Date(),
+                amount:-amount,
+                description:`payout to worker`,
+                transactionType:'debited'
+              });
+            await wallet.save();
+        }
+        return
+
+    }
+
+}

@@ -14,6 +14,7 @@ class Worker {
     public averageRating?:number;
     public totalReviews?:string;
     public isGoogleAuth?: boolean;
+    public stripeAccountId?: string;
 
 
     constructor(data: Partial<Worker>) {

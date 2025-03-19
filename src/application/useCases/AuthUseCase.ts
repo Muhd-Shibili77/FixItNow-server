@@ -69,7 +69,7 @@ export class AuthUseCase {
     return { success: true, message: "OTP verified successfully" };
   }
 
-  async register(newUser: User): Promise<{ createdUser: User; Token: string }> {
+  async register(newUser: User): Promise<{ createdUser: User; Token: string,refreshToken:string }> {
     const { username, email, password, conformpassword } = newUser;
 
     // Validation: Check if all fields are provided
@@ -111,13 +111,14 @@ export class AuthUseCase {
 
     const role = "User";
     const Token = jwtService.generateToken(createdUser.id, role);
+    const refreshToken = jwtService.generateRefreshToken(createdUser.id,role)
 
-    return { createdUser, Token };
+    return { createdUser, Token,refreshToken };
   }
 
   async WorkerRegister(
     worker: Worker
-  ): Promise<{ createdWorker: Worker; Token: string }> {
+  ): Promise<{ createdWorker: Worker; Token: string,refreshToken:string }> {
     const {
       name,
       service,
@@ -204,8 +205,10 @@ export class AuthUseCase {
 
     const role = "Worker";
     const Token = jwtService.generateToken(createdWorker.id, role);
+    const refreshToken = jwtService.generateRefreshToken(createdWorker.id,role)
 
-    return { createdWorker, Token };
+
+    return { createdWorker, Token, refreshToken };
   }
 
   async login(user: LoginUser) {
@@ -241,12 +244,14 @@ export class AuthUseCase {
 
     const role = foundUser ? "User" : "Worker";
     const Token = jwtService.generateToken(account.id, role);
+    const refreshToken = jwtService.generateRefreshToken(account.id,role)
 
     return {
       username: account.username,
       email: account.email,
       role,
       Token,
+      refreshToken,
     };
   }
 
@@ -299,11 +304,12 @@ export class AuthUseCase {
 
     const role = worker ? "Worker" : "User";
     const Token = jwtService.generateToken(account?.id, role);
-
+    const refreshToken = jwtService.generateRefreshToken(account?.id,role)
     return {
       email: payload.email,
       role,
       Token,
+      refreshToken,
     };
 
     } catch (error) {
@@ -337,8 +343,8 @@ export class AuthUseCase {
 
     const role = "User";
     const Token = jwtService.generateToken(createdUser.id, role);
-
-    return { createdUser, Token };
+    const refreshToken = jwtService.generateRefreshToken(createdUser.id,role)
+    return { createdUser, Token,refreshToken };
 
   }
   async googleCreateWorker(username:string,email:string,name:string,service:string,experience:number,phone:number,about:string,profileImage:string){
@@ -399,7 +405,13 @@ export class AuthUseCase {
 
     const role = "Worker";
     const Token = jwtService.generateToken(createdWorker.id, role);
+    const refreshToken = jwtService.generateRefreshToken(createdWorker.id,role)
+    return { createdWorker, Token,refreshToken };
+  }
 
-    return { createdWorker, Token };
+  async newAccessToken(refreshToken:string){
+    const decoded =  jwtService.verifyRefreshToken(refreshToken)
+    const newAccessToken = jwtService.generateToken(decoded.userId,decoded.role)
+    return newAccessToken
   }
 }

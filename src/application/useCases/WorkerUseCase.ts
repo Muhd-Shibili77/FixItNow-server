@@ -3,6 +3,14 @@ import Booking from "../../domain/entity/Booking";
 import Wallet from "../../domain/entity/Wallet";
 import Worker from "../../domain/entity/Worker";
 import { IWorkerRepository } from "../Interfaces/IWorkerRepository";
+import Stripe from "stripe";
+import dotenv from "dotenv";
+dotenv.config();
+
+if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is missing from environment variables");
+  }
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
 export class WorkerUseCase{
@@ -115,5 +123,42 @@ export class WorkerUseCase{
         return wallet
     }
 
+    async createStripeAccount(userId:string){
+        if(!userId){
+            throw new Error('workerId is empty')
+        }
+        
+        
+        await this.WorkerRepository.createStripeAccount(userId)
+        return
+    }
+    async onboardingLink (userId:string){
+        if(!userId){
+            throw new Error('workerId is empty')
+        }
+        const worker = await this.WorkerRepository.findById(userId)
+        if(!worker?.stripeAccountId){
+            throw new Error('worker does not have stripe account!')
+        }
+
+        const accountLink = await stripe.accountLinks.create({
+            account:worker?.stripeAccountId,
+            refresh_url: "http://localhost:5173/wallet",
+            return_url: "http://localhost:5173/wallet",
+            type: "account_onboarding",
+        })
+
+        return accountLink
+
+    }
+
+    async testPayout(userId:string){
+        if(!userId){
+            throw new Error('workerId is empty')
+        }
+        
+        await this.WorkerRepository.testPayout(userId)
+        return
+    }
 
 }

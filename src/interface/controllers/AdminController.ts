@@ -143,5 +143,38 @@ export class AdminController{
             res.status(400).json({ success: false, message: error.message });
         }
     }
+
+    async fetchDashboardData(req:Request,res:Response){
+        try {
+
+            const response = await this.AdminUseCase.fetchDashboardData()
+
+            return res.json({
+                success: true,
+                message: "fetching details successfull",
+                response
+            });
+
+        } catch (error:any) {
+            console.error("fetch dashboard details error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
+
+    async fetchChartData(req:Request,res:Response){
+        try {
+
+            const response = await this.AdminUseCase.fetchChartData()
+            return res.json({
+                success: true,
+                message: "fetching chart data successfull",
+                response
+            })
+            
+        } catch (error:any) {
+            console.error("fetch chart  data error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
     
 }

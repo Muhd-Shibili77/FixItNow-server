@@ -14,6 +14,7 @@ export interface IWorker extends Document{
     averageRating:number,
     totalReviews:string,
     isGoogleAuth?:boolean
+    stripeAccountId?:string
     
 
 }
@@ -60,6 +61,9 @@ totalReviews:{
 },
 isGoogleAuth:{
   type:Boolean ,required:true,default:false
+ },
+ stripeAccountId:{
+   type:String
  }
 });
 

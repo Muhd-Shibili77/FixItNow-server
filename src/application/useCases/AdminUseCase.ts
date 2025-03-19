@@ -74,4 +74,13 @@ export class AdminUseCase{
     async toggleCancelBooking(bookingId:string){
         await this.authRepository.toggleCancelBooking(bookingId)
     }
+
+    async fetchDashboardData(){
+        const response = await this.authRepository.fetchDashboardData()
+        return response;
+    }
+    async fetchChartData(){
+        const response = await this.authRepository.fetchChartData()
+        return response;
+    }
 }

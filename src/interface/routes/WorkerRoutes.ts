@@ -40,6 +40,15 @@ router.patch('/updateReach',authenticateJWT(['Worker']),async (req:Request,res:R
 router.patch('/updateAmount',authenticateJWT(['Worker']),async (req:Request,res:Response):Promise<void>=>{
     await workerController.updateAmount(req,res)
 })
+router.post('/stripe/create-stripe-account',async(req:Request,res:Response):Promise<void>=>{
+    await workerController.createStripeAccount(req,res)
+})
+router.post('/stripe/onboarding-link',async(req:Request,res:Response):Promise<void>=>{
+    await workerController.onboardingLink(req,res)
+})
+router.post('/stripe/testPayout',async(req:Request,res:Response):Promise<void>=>{
+    await workerController.testPayout(req,res)
+})
 
 
 

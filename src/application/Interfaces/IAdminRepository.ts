@@ -11,4 +11,6 @@ export interface IAdminRepository{
     toggleBlockUser(actions:string,id:string):Promise<void>
     toggleBlockWorker(actions:string,id:string):Promise<void>
     toggleCancelBooking(bookingId:string):Promise<void>
+    fetchDashboardData():Promise<{totalServices: number,todayServices:number,serviceCompleted:number,servicePending:number,yearlyBreakup:number,monthly:number,todays:number}>
+    fetchChartData():Promise<{dataPoints:number[]}>
 }

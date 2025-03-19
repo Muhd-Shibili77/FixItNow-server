@@ -49,6 +49,15 @@ export class AuthController{
     try{
         const {username,email,password,conformpassword} =req.body
         const response = await this.AuthUseCase.register({username,email,password,conformpassword})
+        
+        res.cookie('refreshToken',response.refreshToken,{
+            httpOnly:true,
+            // secure:true,
+            sameSite:'strict',
+            path:'/refresh-token',
+            maxAge:7 * 24 * 60 * 60 * 1000,
+        });
+
         res.json({ success: true, message: "User registered successfully" ,response,Token:response.Token});
     }catch(error:any){
         console.error(error);
@@ -66,6 +75,14 @@ export class AuthController{
             
             const response = await this.AuthUseCase.WorkerRegister({username,email,password,conformpassword,name,service,experience,phone,about,profileImage:image})
             
+            res.cookie('refreshToken',response.refreshToken,{
+                httpOnly:true,
+                // secure:true,
+                sameSite:'strict',
+                path:'/refresh-token',
+                maxAge:7 * 24 * 60 * 60 * 1000,
+            });
+
             res.json({ success: true, message: "worker registered successfully" ,response,Token:response.Token});
         }catch(error:any){
             console.error(error);
@@ -79,6 +96,14 @@ export class AuthController{
             const {email,password} =req.body
             const response = await this.AuthUseCase.login({email,password})
             
+
+            res.cookie('refreshToken',response.refreshToken,{
+                httpOnly:true,
+                // secure:true,
+                sameSite:'strict',
+                path:'/refresh-token',
+                maxAge:7 * 24 * 60 * 60 * 1000,
+            });
             
             return res.status(200).json({
                 success: true,
@@ -103,6 +128,16 @@ export class AuthController{
         try {
           const { credential } = req.body;
           const response = await this.AuthUseCase.googleLogin(credential);
+          
+
+          res.cookie('refreshToken',response.refreshToken,{
+            httpOnly:true,
+            // secure:true,
+            sameSite:'strict',
+            path:'/refresh-token',
+            maxAge:7 * 24 * 60 * 60 * 1000,
+        });
+
           return res.status(200).json({
             success: true,
             message: "Google login successful",
@@ -122,6 +157,15 @@ export class AuthController{
             const {username , email}=req.body
             
             const response = await this.AuthUseCase.googleCreateUser(username,email)
+
+            res.cookie('refreshToken',response.refreshToken,{
+                httpOnly:true,
+                // secure:true,
+                sameSite:'strict',
+                path:'/refresh-token',
+                maxAge:7 * 24 * 60 * 60 * 1000,
+            });
+
             res.json({ success: true, message: "User registered with google successfully" ,response,Token:response.Token});
 
         } catch (error:any) {
@@ -136,7 +180,16 @@ export class AuthController{
         try {
             const {name,service,experience,phone,about,username,email} =req.body
             const profileImage: string = req.file?.filename || "";
-            const response = await this.AuthUseCase.googleCreateWorker(username,email,name,service,experience,phone,about,profileImage)    
+            const response = await this.AuthUseCase.googleCreateWorker(username,email,name,service,experience,phone,about,profileImage) 
+
+            res.cookie('refreshToken',response.refreshToken,{
+                httpOnly:true,
+                // secure:true,
+                sameSite:'strict',
+                path:'/refresh-token',
+                maxAge:7 * 24 * 60 * 60 * 1000,
+            });   
+
             res.json({ success: true, message: "worker registered with google successfully" ,response,Token:response.Token});
 
         } catch (error:any){
@@ -145,4 +198,23 @@ export class AuthController{
         }
        
       }
+
+     async refreshAccessToken(req:Request,res:Response):Promise<Response>{
+        try {
+            const refreshToken = req.cookies.refreshToken;
+            if (!refreshToken) {
+                return res.status(403).json({ success: false, message: "Refresh token missing" });
+             }
+
+             const newAccessToken = await this.AuthUseCase.newAccessToken(refreshToken)
+            return res.status(200).json({
+                success: true,
+                accessToken: newAccessToken,
+            });
+
+            
+        } catch (error) {
+             return res.status(403).json({ success: false, message: "Invalid or expired refresh token" });
+        }
+     }
 }

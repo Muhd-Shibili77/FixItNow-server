@@ -12,4 +12,6 @@ export interface IWorkerRepository{
     toggleReachStatus(bookingId:string,reachStatus:string):Promise<void>
     updateAmount(bookingId:string,amount:string):Promise<void>
     getWallet(workerId:string):Promise<Wallet | null>
+    createStripeAccount(userId:string):Promise<void>
+    testPayout(userId:string):Promise<void>
 }

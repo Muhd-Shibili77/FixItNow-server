@@ -153,7 +153,93 @@ export class AdminRespository implements IAdminRepository {
        
    }
 
-   async toggleCancelBooking(bookingId: string): Promise<void> {
+   async toggleCancelBooking(bookingId: string){
      await bookingModel.findByIdAndUpdate(bookingId,{workStatus:'Cancelled'})
    }
+
+   async fetchDashboardData(): Promise<{ totalServices: number; todayServices: number; serviceCompleted: number; servicePending: number; yearlyBreakup: number; monthly: number; todays: number; }> {
+      const bookings = await bookingModel.countDocuments();
+
+      const now = new Date()
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0); 
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999); 
+      const stateOfYear = new Date(new Date().getFullYear(),0,1);
+      const endOfYear = new Date(new Date().getFullYear(),11,31,23,59,999)
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+
+      const todayBookings = await bookingModel.countDocuments({
+        placedAt :{$gt :startOfDay , $lt:endOfDay}
+      })
+
+      const completedService = await bookingModel.countDocuments({
+        workStatus:'Completed'
+      })
+      const pendingService = await bookingModel.countDocuments({
+        workStatus:'Pending'
+      })
+      const yearlyBookings = await bookingModel.countDocuments({
+        workStatus: "Completed",
+        placedAt:{$gt:stateOfYear,$lt:endOfYear}
+      })
+      const yearlyBreakup = yearlyBookings*40
+
+      const monthlyCompletedBookings  = await bookingModel.countDocuments({
+        workStatus: "Completed",
+        placedAt:{$gt:startOfMonth,$lt:endOfMonth}
+      })
+      const monthlyProfit = monthlyCompletedBookings*40
+
+      const todayCompletedBookings = await bookingModel.countDocuments({
+        workStatus: "Completed",
+        placedAt :{$gt :startOfDay , $lt:endOfDay}
+      })
+
+      const dailyProfit = todayCompletedBookings*40
+
+      return{
+        totalServices:bookings,
+        todayServices:todayBookings,
+        serviceCompleted:completedService,
+        servicePending:pendingService,
+        yearlyBreakup:yearlyBreakup,
+        monthly:monthlyProfit,
+        todays:dailyProfit,
+      }
+   }
+
+   async fetchChartData(): Promise<{ dataPoints: number[]; }> {
+       const currentYear = new Date().getFullYear();
+       const monthlyData = await bookingModel.aggregate([
+        {
+          $match:{
+            placedAt:{
+              $gte: new Date(`${currentYear}-01-01T00:00:00.000Z`),
+              $lte: new Date(`${currentYear}-12-31T23:59:59.999Z`),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: { $month: "$placedAt" },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { _id: 1 } },
+       ])
+
+       const monthlyBookings = Array(12).fill(0);
+       
+
+       monthlyData.forEach(({ _id, count }) => {
+            monthlyBookings[_id - 1] = count;
+       });
+       
+
+       return {dataPoints:monthlyBookings}
+   }
+   
 }
