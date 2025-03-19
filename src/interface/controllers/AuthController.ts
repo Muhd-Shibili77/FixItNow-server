@@ -101,7 +101,7 @@ export class AuthController{
                 httpOnly:true,
                 // secure:true,
                 sameSite:'strict',
-                path:'/refresh-token',
+                path:'/',
                 maxAge:7 * 24 * 60 * 60 * 1000,
             });
             
@@ -184,7 +184,7 @@ export class AuthController{
 
             res.cookie('refreshToken',response.refreshToken,{
                 httpOnly:true,
-                // secure:true,
+                // secure:"production",
                 sameSite:'strict',
                 path:'/refresh-token',
                 maxAge:7 * 24 * 60 * 60 * 1000,

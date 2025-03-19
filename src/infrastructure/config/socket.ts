@@ -20,6 +20,7 @@ export function initializeSocket(io:Server){
             const {sender,senderModel,receiver,receiverModel,message} = data
             
             io.to(receiver).emit('receiveMessage',data)
+            io.to(receiver).emit('newNotification',{sender,message})
             const savedMessage = await messageUseCase.saveMessage(sender,senderModel,receiver,receiverModel,message)
             
         })
