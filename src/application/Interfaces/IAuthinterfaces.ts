@@ -10,5 +10,6 @@ export interface IAuthRepository {
     create(user: User): Promise<User>;
     createWorker(worker: Worker): Promise<Worker>;
     createGoogleUser(name:string,email:string):Promise<User>;
-    createGoogleWorker(username:string,email:string,name:string,service:string,experience:number,phone:number,about:string,profileImage:string):Promise<Worker>
+    createGoogleWorker(username:string,email:string,service:string,experience:number,phone:number,about:string,profileImage:string):Promise<Worker>
+    changePassword(newPassword:string,role:string,id:string):Promise<void>
 }

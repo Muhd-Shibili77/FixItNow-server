@@ -46,6 +46,32 @@ export class AuthUseCase {
     return { otp };
   }
 
+  async forgetSentOTP(newUser: Pick<User, "email">): Promise<{ otp: string }> {
+    const { email } = newUser;
+
+    const foundUser = await this.authRepository.findUserByEmail(email);
+    const foundWorker = await this.authRepository.findWorkerByEmail(email);
+    if(!foundUser && !foundWorker){
+      throw new Error("Email does'nt exist")
+    }
+
+    const otp = await this.authRepository.generateOtp(email);
+    return { otp };
+  }
+
+  async forgetReSentOTP(newUser: Pick<User, "email">): Promise<{ otp: string }> {
+    const { email } = newUser;
+
+    const foundUser = await this.authRepository.findUserByEmail(email);
+    const foundWorker = await this.authRepository.findWorkerByEmail(email);
+    if(!foundUser && !foundWorker){
+      throw new Error("Email does'nt exist")
+    }
+
+    const otp = await this.authRepository.generateOtp(email);
+    return { otp };
+  }
+
   async verifyOTP(otp: {
     email: string;
     otp: string;
@@ -120,7 +146,7 @@ export class AuthUseCase {
     worker: Worker
   ): Promise<{ createdWorker: Worker; Token: string,refreshToken:string }> {
     const {
-      name,
+     
       service,
       experience,
       phone,
@@ -133,7 +159,6 @@ export class AuthUseCase {
     } = worker;
 
     if (
-      !name ||
       !service ||
       !experience ||
       !phone ||
@@ -147,9 +172,7 @@ export class AuthUseCase {
       throw new Error("All fields are required");
     }
 
-    if (name.length < 3) {
-      throw new Error("Name must be at least 3 characters long");
-    }
+   
 
     if (service.trim().length === 0) {
       throw new Error("Service field is required");
@@ -232,6 +255,10 @@ export class AuthUseCase {
       !account.password
     ) {
       throw new Error("Invalid account data");
+    }
+  
+    if(account.isBlock){
+      throw new Error("user is blocked");
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -347,11 +374,11 @@ export class AuthUseCase {
     return { createdUser, Token,refreshToken };
 
   }
-  async googleCreateWorker(username:string,email:string,name:string,service:string,experience:number,phone:number,about:string,profileImage:string){
+  async googleCreateWorker(username:string,email:string,service:string,experience:number,phone:number,about:string,profileImage:string){
   
 
     if (
-      !name ||
+      
       !service ||
       !experience ||
       !phone ||
@@ -363,9 +390,7 @@ export class AuthUseCase {
       throw new Error("All fields are required");
     }
 
-    if (name.length < 3) {
-      throw new Error("Name must be at least 3 characters long");
-    }
+   
 
     if (service.trim().length === 0) {
       throw new Error("Service field is required");
@@ -397,7 +422,7 @@ export class AuthUseCase {
 
    
 
-    const createdWorker = await this.authRepository.createGoogleWorker(username,email,name,service,experience,phone,about,profileImage);
+    const createdWorker = await this.authRepository.createGoogleWorker(username,email,service,experience,phone,about,profileImage);
 
     if (!createdWorker.id) {
       throw new Error("Failed to create worker");
@@ -414,4 +439,41 @@ export class AuthUseCase {
     const newAccessToken = jwtService.generateToken(decoded.userId,decoded.role)
     return newAccessToken
   }
+
+  async changePassword(newPassword:string,confirmPassword:string,email:string){
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        throw new Error("Invalid email format");
+      }
+
+      const foundUser = await this.authRepository.findUserByEmail(email);
+      const foundWorker = await this.authRepository.findWorkerByEmail(email);
+     
+      const account = foundUser || foundWorker
+      if(!account){
+        throw new Error("email doesnt exist");
+      }
+      let role;
+      let id;
+      if(foundUser){
+        role="User"
+        id = foundUser.id
+      }else if(foundWorker){
+        role="Worker"
+        id = foundWorker.id
+      }
+      if(!role || !id){
+        throw new Error('role & id not found')
+      }
+
+      if (newPassword !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+      
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      
+      await this.authRepository.changePassword(hashedPassword,role,id)
+      return
+  } 
+  
 }

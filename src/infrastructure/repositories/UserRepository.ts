@@ -165,7 +165,7 @@ export class UserRepository implements IUserRepository {
   });
 }
 async findBookings(userId: string): Promise<Booking[] | null> {
-  const bookings = await bookingModel.find({ userId: userId }).populate("serviceId", "name").populate('workerId',"name phone").populate('userId','username').sort({ placedAt: -1 });
+  const bookings = await bookingModel.find({ userId: userId }).populate("serviceId", "name").populate('workerId',"username phone").populate('userId','username').sort({ placedAt: -1 });
 
   if (!bookings.length) {
       return null;
@@ -266,7 +266,9 @@ async getReview(workerId: string): Promise<Review[] | null> {
 }
 
 async userInfo(userId: string): Promise<User | null> {
+
   const user = await UserModel.findById(userId)
+
   return user
 }
 async updateUser(userId: string, username: string, phone: number, profileImage: string): Promise<User> {

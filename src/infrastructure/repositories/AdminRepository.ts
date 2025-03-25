@@ -34,6 +34,7 @@ export class AdminRespository implements IAdminRepository {
           id: user.id,
           username: user.username,
           email: user.email,
+          phone:user.phone,
           isBlock: user.isBlock
         }as Partial<User>)), 
         totalPages
@@ -60,14 +61,15 @@ export class AdminRespository implements IAdminRepository {
       return {
         workers: workers.map(worker => ({
           id: worker.id,
-          name: worker.name,
+          username: worker.username,
           email: worker.email,
           isBlock: worker.isBlock,
           experience: worker.experience,
           service: worker.service,
           phone: worker.phone,
           about: worker.about,
-          profileImage:worker.profileImage
+          profileImage:worker.profileImage,
+          averageRating:worker.averageRating,
         }) as Partial<Worker>),
         totalPages: 1, 
       };
@@ -93,7 +95,8 @@ export class AdminRespository implements IAdminRepository {
           experience:worker.experience,
           service:worker.service,
           phone:worker.phone,
-          about:worker.about
+          about:worker.about,
+          averageRating:worker.averageRating,
         }as Partial<Worker>)),
         totalPages
        }
@@ -112,9 +115,10 @@ export class AdminRespository implements IAdminRepository {
     
    
 
-       const bookings = await bookingModel.find(query).populate("workerId",'name phone').populate('userId','username')
+       const bookings = await bookingModel.find(query).populate("workerId",'username phone').populate('userId','username')
        .skip((pageNumber - 1) * pageSize)
-       .limit(pageSize);
+       .limit(pageSize)
+       .sort({placedAt:-1})
 
        if(!bookings){
             return {bookings:null,totalPages:0}

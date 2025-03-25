@@ -36,9 +36,6 @@ const WorkerSchema:Schema = new Schema({
   isBlock:{
      type: Boolean, required: true ,default:false
   },
-  name:{
-    type:String,required:true
-  },
   service:{
     type:mongoose.Schema.Types.ObjectId,
     required:true,

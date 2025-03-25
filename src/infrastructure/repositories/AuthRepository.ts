@@ -28,7 +28,6 @@ export class AuthRepository implements IAuthRepository{
             email: newWorker.email,
             password: newWorker.password,
             phone: newWorker.phone,
-            name: newWorker.name,
             service: newWorker.service,
             experience: newWorker.experience,
             about: newWorker.about,
@@ -43,7 +42,7 @@ export class AuthRepository implements IAuthRepository{
         if(!user){
             return null
         }
-        return new User({id:user.id,username: user.username, email: user.email,password:user.password})
+        return new User({id:user.id,username: user.username, email: user.email,password:user.password,isBlock:user.isBlock})
     }
 
     async findWorkerByEmail(email:string):Promise<Worker | null>{
@@ -51,7 +50,7 @@ export class AuthRepository implements IAuthRepository{
         if(!worker){
             return null
         }
-        return new Worker({id:worker.id,username: worker.username, email: worker.email,password:worker.password})
+        return new Worker({id:worker.id,username: worker.username, email: worker.email,password:worker.password,isBlock:worker.isBlock})
     }
 
 
@@ -119,12 +118,12 @@ export class AuthRepository implements IAuthRepository{
         return createUser
     }
 
-    async createGoogleWorker(username: string, email: string, name: string, service: string, experience: number, phone: number, about: string, profileImage: string): Promise<Worker> {
+    async createGoogleWorker(username: string, email: string, service: string, experience: number, phone: number, about: string, profileImage: string): Promise<Worker> {
         const createWorker = await WorkerModel.create({
             username: username,
             email: email,
             phone: phone,
-            name: name,
+            
             service: service,
             experience: experience,
             about: about,
@@ -135,6 +134,15 @@ export class AuthRepository implements IAuthRepository{
        return  createWorker
     }
 
+   async changePassword(newPassword: string, role: string, id: string): Promise<void> {
+     
+    if(role==='User'){
+        
+        await UserModel.findByIdAndUpdate(id,{password:newPassword})
+       }else{
+        await WorkerModel.findByIdAndUpdate(id,{password:newPassword})
+       }
+   }
     
 
 

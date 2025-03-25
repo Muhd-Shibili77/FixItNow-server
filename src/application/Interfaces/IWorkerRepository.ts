@@ -14,4 +14,5 @@ export interface IWorkerRepository{
     getWallet(workerId:string):Promise<Wallet | null>
     createStripeAccount(userId:string):Promise<void>
     testPayout(userId:string):Promise<void>
+    updateWorkerPassword(userId:string,newPassword:string):Promise<void>
 }

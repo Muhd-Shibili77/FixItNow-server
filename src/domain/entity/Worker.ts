@@ -1,7 +1,6 @@
 
 class Worker {
     public readonly id?:string;
-    public name! :string;
     public service!:string;
     public experience!:number;
     public phone!:number;
@@ -14,6 +13,7 @@ class Worker {
     public averageRating?:number;
     public totalReviews?:string;
     public isGoogleAuth?: boolean;
+    public isBlock?: boolean;
     public stripeAccountId?: string;
 
 

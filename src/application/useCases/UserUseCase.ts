@@ -48,10 +48,8 @@ export class UserUseCase{
         if(!bookAddress || !bookingType || !workerId || !userId || !userLocation){
             throw new Error("All fields are required");
         }
-        // if (!userLocation || !userLocation.latitude || !userLocation.longitude) {
-        //     throw new Error("Location is required");
-        //   }
-        console.log(typeof userLocation)
+       
+       
         const findAddress = await this.userRepository.findAddressById(bookAddress)
         if(!findAddress){
             throw new Error('Address not found')
@@ -179,6 +177,7 @@ export class UserUseCase{
             throw new Error('user id is empty')
         }
         const userInfo = await this.userRepository.userInfo(userId)
+        
         return userInfo
     }
 

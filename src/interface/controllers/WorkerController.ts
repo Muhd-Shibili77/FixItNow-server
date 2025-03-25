@@ -8,7 +8,7 @@ interface WorkerUpdateData {
   conformpassword?: string;
   email?: string;
 
-  name: string;
+  
   service: string;
   experience: number;
   phone: number;
@@ -37,26 +37,21 @@ export class WorkerController {
 
   async editProfile(req: Request, res: Response): Promise<void> {
     try {
-      const { _id, name, service, experience, phone, about } = req.body;
-
-      if (!_id || !name || !service || !experience || !phone || !about) {
+      const { _id, username, service, experience, phone, about,image } = req.body;
+     
+      if (!_id || !username || !service || !experience || !phone || !about) {
         throw new Error("All fields are required");
       }
-      let image;
-      if (!req.file && req.body.image) {
-        image = req.body.image;
-      } else if (req.file) {
-        image = req.file.filename;
-      }
+      
 
       const updateData: WorkerUpdateData = {
         id: _id,
-        name,
+        username,
         service,
         experience,
         phone,
         about,
-        profileImage: image ?? "", // Ensuring it's always a string
+        profileImage: image
       };
 
       const response = await this.WorkerUseCase.WorkerProfileEdit(updateData);
@@ -95,7 +90,6 @@ export class WorkerController {
 
     const parsedResponse = workers.map((worker) => ({
       id: worker.id,
-      name: worker.name,
       profileImage: worker.profileImage,
       experience: worker.experience,
       service: worker.service,
@@ -286,5 +280,35 @@ export class WorkerController {
     } catch (error:any) {
       res.json({ success: false, error: error.message });
     }
+  }
+
+  async updateWorkerPassword(req:Request,res:Response){
+    try {
+      
+      const userId = req.query.userId as string;
+     
+      const {currentPassword,newPassword} = req.body;
+
+      await this.WorkerUseCase.updateWorkerPassword(userId,newPassword,currentPassword)
+
+      res.json({
+        success:true,
+        message:'worker password updated successfull',
+      })
+
+
+    } catch (error) {
+      console.error('Password update error:', error);
+      if (error instanceof Error) {
+        return res.status(400).json({ 
+          success: false, 
+          message: error.message 
+        });
+      }
+      res.status(500).json({ 
+        success: false, 
+        message: 'Password update failed' 
+      });
+     }
   }
 }

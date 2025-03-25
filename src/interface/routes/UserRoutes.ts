@@ -43,6 +43,7 @@ router.get('/userInfo',async(req:Request,res:Response):Promise<void>=>{
     await userController.userInfo(req,res)
 })
 router.post('/upload',profileUpload.single('file'),async(req:Request,res:Response):Promise<void>=>{
+    
     await userController.uploadProfile(req,res)
 })
 router.put('/update',async(req:Request,res:Response):Promise<void>=>{

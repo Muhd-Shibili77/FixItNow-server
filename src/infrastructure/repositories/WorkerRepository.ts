@@ -61,7 +61,7 @@ export class WorkerRepository implements IWorkerRepository{
         return {
             workers: workers.map(worker => new Worker({
                 id: worker.id,
-                name: worker.name,
+                username: worker.username,
                 profileImage: worker.profileImage,
                 experience:worker.experience,
                 service : (worker.service as any)?.name,
@@ -73,7 +73,7 @@ export class WorkerRepository implements IWorkerRepository{
     }
     async getJob(workerId: string): Promise<Booking[] | null> {
         
-        const jobs = await bookingModel.find({ workerId: workerId }).populate("userId", "username phone").sort({ placedAt: -1 });;
+        const jobs = await bookingModel.find({ workerId: workerId }).populate("userId", "username phone profileImage").sort({ placedAt: -1 });;
         if (!jobs.length) {
             return null;
         }
@@ -192,6 +192,10 @@ export class WorkerRepository implements IWorkerRepository{
         }
         return
 
+    }
+
+    async updateWorkerPassword(userId: string, newPassword: string): Promise<void> {
+        await WorkerModel.findByIdAndUpdate(userId,{password:newPassword})
     }
 
 }

@@ -8,12 +8,12 @@ interface LoginAdmin {
   }
 
 export class AdminUseCase{
-    constructor(private authRepository:IAdminRepository){}
+    constructor(private adminRepository:IAdminRepository){}
  
 
     async login(admin:LoginAdmin){
        
-        const foundAdmin = await this.authRepository.findAdminByEmail(admin.email)
+        const foundAdmin = await this.adminRepository.findAdminByEmail(admin.email)
         if(!foundAdmin || !foundAdmin.id){
             throw new Error("Email doesn't exist")
         }
@@ -28,17 +28,18 @@ export class AdminUseCase{
         }
         const role = 'Admin'
         const Token = jwtService.generateToken(foundAdmin.id,role)
-
+        const refreshToken = jwtService.generateRefreshToken(foundAdmin.id,role)
         return {
             name : foundAdmin.name,
             email : foundAdmin.email,
             role,
-            Token
+            Token,
+            refreshToken,
         }
     }
 
     async fetchUsers(query:object,pageNumber:number,pageSize:number){
-        const users = await this.authRepository.fetchUsers(query,pageNumber,pageSize)
+        const users = await this.adminRepository.fetchUsers(query,pageNumber,pageSize)
         if(!users){
             throw new Error("user is empty")
         }
@@ -46,12 +47,12 @@ export class AdminUseCase{
     }
 
     async toggleBlockUser(actions:string,id:string){
-         await this.authRepository.toggleBlockUser(actions,id)    
+         await this.adminRepository.toggleBlockUser(actions,id)    
     }
 
     async fetchWorkers(query:object,pageNumber:number,pageSize:number){
         
-        const workers = await this.authRepository.fetchWorkers(query,pageNumber,pageSize)
+        const workers = await this.adminRepository.fetchWorkers(query,pageNumber,pageSize)
         if(!workers){
             throw new Error("worker is empty")
         }
@@ -60,11 +61,11 @@ export class AdminUseCase{
     }
 
    async toggleBlockWorker(actions:string,id:string){
-        await this.authRepository.toggleBlockWorker(actions,id)    
+        await this.adminRepository.toggleBlockWorker(actions,id)    
    }
 
     async fetchBookings(query:object,pageNumber:number,pageSize:number){
-        const bookings = await this.authRepository.fetchBookings(query,pageNumber,pageSize)
+        const bookings = await this.adminRepository.fetchBookings(query,pageNumber,pageSize)
         if(!bookings){
             throw new Error("booking list is empty")
         }
@@ -72,15 +73,15 @@ export class AdminUseCase{
     }
 
     async toggleCancelBooking(bookingId:string){
-        await this.authRepository.toggleCancelBooking(bookingId)
+        await this.adminRepository.toggleCancelBooking(bookingId)
     }
 
     async fetchDashboardData(){
-        const response = await this.authRepository.fetchDashboardData()
+        const response = await this.adminRepository.fetchDashboardData()
         return response;
     }
     async fetchChartData(){
-        const response = await this.authRepository.fetchChartData()
+        const response = await this.adminRepository.fetchChartData()
         return response;
     }
 }

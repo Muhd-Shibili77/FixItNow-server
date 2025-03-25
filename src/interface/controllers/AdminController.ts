@@ -9,6 +9,15 @@ export class AdminController{
             const {email,password} = req.body
             const response = await this.AdminUseCase.login({email,password})
             
+
+            res.cookie('refreshToken',response.refreshToken,{
+                httpOnly:true,
+                // secure:true,
+                sameSite:'strict',
+                path:'/',
+                maxAge:7 * 24 * 60 * 60 * 1000,
+            });
+
             return res.status(200).json({
                 success: true,
                 message: "Login successful",
@@ -24,6 +33,7 @@ export class AdminController{
 
     async fetchUsers(req:Request,res:Response){
         try {
+           
           const search: string = (req.query.search as string) || "";
           const page: number = parseInt(req.query.page as string) || 1;
           const limit: number = parseInt(req.query.limit as string) || 10;

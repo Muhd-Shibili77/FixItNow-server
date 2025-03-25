@@ -205,6 +205,7 @@ export class UserController {
       if(!req.file){
         throw new Error('file is missing')
       }
+      
       res.json({url:req.file.path})
       
     } catch (error) {

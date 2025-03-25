@@ -14,8 +14,7 @@ router.get('/data',authenticateJWT(['User','Worker']),async (req:Request,res:Res
     await workerController.fetchWorker(req,res)
 })
 
-router.post('/edit-profile',authenticateJWT(['Worker']),upload.single('image'),async (req:Request,res:Response):Promise<void>=>{
-    
+router.post('/edit-profile',authenticateJWT(['Worker']),upload.none(),async (req:Request,res:Response):Promise<void>=>{
     await workerController.editProfile(req,res)
 })
 
@@ -48,6 +47,9 @@ router.post('/stripe/onboarding-link',async(req:Request,res:Response):Promise<vo
 })
 router.post('/stripe/testPayout',async(req:Request,res:Response):Promise<void>=>{
     await workerController.testPayout(req,res)
+})
+router.patch('/updatePassword',async (req:Request,res:Response):Promise<void>=>{
+    await workerController.updateWorkerPassword(req,res)
 })
 
 

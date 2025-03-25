@@ -14,9 +14,14 @@ export class ServiceUseCase {
 
     async addService(name: string, icon: string): Promise<Service> {
 
-        if (!name || !icon) {
-            throw new Error("All fields are required");
-        }
+       
+        if (!name) {
+            throw new Error("name is required");
+          }
+        if (!icon) {
+            throw new Error("Image file is required");
+          }
+
         const createdService = await this.serviceRepository.addService(name, icon);
         if (!createdService.id) {
             throw new Error("Failed to add service");
@@ -32,6 +37,38 @@ export class ServiceUseCase {
             }
         
         return allService;
+    }
+
+    async fetchService(){
+        const services = await this.serviceRepository.fetchService();
+        if(!services){
+            throw new Error('failed to fetch the services or service not found')
+        }
+        return services
+    }
+
+    async delService(serviceId:string,isDelete:string){
+        if(!serviceId){
+            throw new Error('serivce id not found')
+        }
+        if(!isDelete){
+            throw new Error('action required')
+        }
+     
+        await this.serviceRepository.delService(serviceId,isDelete)
+        return 
+    }
+
+    async updateService(serviceId:string,name:string,icon:string){
+        if (!name) {
+            throw new Error("name is required");
+          }
+        if (!icon) {
+            throw new Error("Image file is required");
+          }
+
+          await this.serviceRepository.updateService(serviceId,name,icon)
+          return 
     }
 
 }
