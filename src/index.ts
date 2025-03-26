@@ -36,7 +36,10 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }));
-  
+
+  app.get('/',(req,res)=>{
+    res.send('server is working')
+  })
 
 app.use('/uploads', express.static(path.join(process.cwd(), 'src/infrastructure/fileStorage/profilePic')));
 

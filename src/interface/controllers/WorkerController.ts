@@ -90,6 +90,7 @@ export class WorkerController {
 
     const parsedResponse = workers.map((worker) => ({
       id: worker.id,
+      username: worker.username,
       profileImage: worker.profileImage,
       experience: worker.experience,
       service: worker.service,
