@@ -40,5 +40,8 @@ router.get('/dashboard',async(req:Request,res:Response):Promise<void>=>{
 router.get('/chartData',async(req:Request,res:Response):Promise<void>=>{
     await adminController.fetchChartData(req,res)
 })
+router.get('/earnings',authenticateJWT(['Admin']),async(req:Request,res:Response):Promise<void>=>{
+    await adminController.fetchEarnings(req,res)
+})
 
 export default router;
