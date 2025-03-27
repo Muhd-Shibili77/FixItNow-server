@@ -273,6 +273,7 @@ export class AdminRespository implements IAdminRepository {
           bookingNo:booking.bookingNo,
           paymentStatus:booking.paymentStatus,
           amount: booking.amount,
+          commision:40,
         })),
          totalPages
        }
