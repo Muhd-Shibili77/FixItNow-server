@@ -187,4 +187,26 @@ export class AdminController{
         }
     }
     
+    async fetchEarnings(req:Request,res:Response){
+        try {
+            const search: string = (req.query.search as string) || "";
+            const page: number = parseInt(req.query.page as string) || 1;
+            const limit: number = parseInt(req.query.limit as string) || 10;
+            
+            const query = search ? { bookingNo: { $regex: search, $options: "i", paymentStatus:true } } : { paymentStatus:true };
+
+            const {bookings,totalPages} = await this.AdminUseCase.fetchEarnings(query,page,limit)
+            
+            return res.json({
+                success: true,
+                message: "earnings list fetching successfull",
+                response:bookings,
+                currentPage: page,
+                totalPages: totalPages
+              });
+        } catch (error:any) {
+            console.error("fetching earnins Error:", error);
+            res.status(400).json({ success: false, message: error.message });
+        }
+    }
 }

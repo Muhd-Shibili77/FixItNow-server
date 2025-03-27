@@ -84,4 +84,11 @@ export class AdminUseCase{
         const response = await this.adminRepository.fetchChartData()
         return response;
     }
+    async fetchEarnings(query:object,pageNumber:number,pageSize:number){
+        const earnings = await this.adminRepository.fetchEarnings(query,pageNumber,pageSize)
+        if(!earnings){
+            throw new Error("earnings list is empty")
+        }
+        return earnings
+    }
 }

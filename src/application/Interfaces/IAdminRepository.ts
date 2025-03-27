@@ -13,4 +13,5 @@ export interface IAdminRepository{
     toggleCancelBooking(bookingId:string):Promise<void>
     fetchDashboardData():Promise<{totalServices: number,todayServices:number,serviceCompleted:number,servicePending:number,yearlyBreakup:number,monthly:number,todays:number}>
     fetchChartData():Promise<{dataPoints:number[]}>
+    fetchEarnings(query: Record<string, any>, pageNumber: number, pageSize: number): Promise<{bookings:Partial<Booking>[] | null,totalPages:number}>
 }

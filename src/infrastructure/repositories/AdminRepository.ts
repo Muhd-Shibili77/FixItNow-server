@@ -89,7 +89,7 @@ export class AdminRespository implements IAdminRepository {
        return {
         workers:worker.map(worker=>({
           id:worker.id,
-          name:worker.name,
+          username: worker.username,
           email:worker.email,
           isBlock:worker.isBlock,
           experience:worker.experience,
@@ -245,5 +245,40 @@ export class AdminRespository implements IAdminRepository {
 
        return {dataPoints:monthlyBookings}
    }
+
+
+
+   async fetchEarnings(query: Record<string, any>, pageNumber: number, pageSize: number): Promise<{bookings:Partial<Booking>[] | null,totalPages:number}> {
+
+
+    const totalCount = await bookingModel.countDocuments(query);
+    const totalPages = Math.ceil(totalCount / pageSize);   
+    
+    
+   
+
+       const bookings = await bookingModel.find(query,{_id:1,placedAt:1,paymentStatus:1,bookingNo:1,amount:1})
+       .skip((pageNumber - 1) * pageSize)
+       .limit(pageSize)
+       .sort({placedAt:-1})
+
+       if(!bookings){
+            return {bookings:null,totalPages:0}
+       }
+       
+       return {
+        bookings:bookings.map((booking) =>({
+          id: String(booking._id),
+          placedAt: booking.placedAt,
+          bookingNo:booking.bookingNo,
+          paymentStatus:booking.paymentStatus,
+          amount: booking.amount,
+        })),
+         totalPages
+       }
+       
+       
+   }
+
    
 }
