@@ -25,8 +25,9 @@ export class NotificationRepository implements INotificationRepository {
             message:newNotification.message,
             isRead:newNotification.isRead,
             timestamp:newNotification.timestamp,
-            senderName: senderDetails?.username || "Unknown",
-            senderProfileImage: senderDetails?.profileImage || "",
+            senderDetails:senderDetails,
+            // senderName: senderDetails?.username || "Unknown",
+            // senderProfileImage: senderDetails?.profileImage || "",
         })
     }
 
