@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface INotification extends Document {
   user: string; 
   sender: string;
-  senderModel: "User" | "Worker"; 
+  senderModel: "Users" | "Workers"; 
   type: "message" | "reaction";
   message: string; 
   isRead: boolean;
@@ -13,7 +13,7 @@ export interface INotification extends Document {
 const NotificationSchema = new Schema({
   user: { type: Schema.Types.ObjectId, required: true },
   sender: { type: Schema.Types.ObjectId, required: true },
-  senderModel: { type: String, enum: ["User", "Worker"], required: true },
+  senderModel: { type: String, enum: ["Users", "Workers"], required: true },
   type: { type: String, enum: ["message", "reaction"], required: true },
   message: { type: String, required: true },
   isRead: { type: Boolean, default: false },
