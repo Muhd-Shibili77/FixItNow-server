@@ -1,10 +1,14 @@
 import { Server } from "socket.io";
 import { MessageUseCase } from "../../application/useCases/MessageUseCase";
 import { MessageRepository } from "../repositories/MessageRepository";
+import { NotificationUseCase } from "../../application/useCases/NotificationUseCase";
+import { NotificationRepository } from "../repositories/NotificationRepository";
 
 export function initializeSocket(io: Server) {
     const messageRepository = new MessageRepository();
     const messageUseCase = new MessageUseCase(messageRepository);
+    const notificationRepository = new NotificationRepository()
+    const notificationUseCase = new NotificationUseCase(notificationRepository)
 
     // Keep track of active calls
     const activeCallsMap = new Map();
@@ -24,6 +28,15 @@ export function initializeSocket(io: Server) {
             io.to(receiver).emit('newNotification', { sender, message });
             
             await messageUseCase.saveMessage(sender, senderModel, receiver, receiverModel, message);
+            const notification = await notificationUseCase.saveNotification({
+                user: receiver,
+                sender,
+                senderModel,
+                type: "message",
+                message: "new message",
+            })
+
+            io.to(receiver).emit('notificationListUpdated', notification);
         });
 
         socket.on('getMessage', async (data, callback) => {
@@ -46,6 +59,16 @@ export function initializeSocket(io: Server) {
                 console.error("Error adding reaction:", error);
                 
             }
+        });
+
+        socket.on("getNotifications", async (userId, callback) => {
+            const notifications = await notificationUseCase.getNotification(userId)
+            callback(notifications);
+        });
+
+        
+        socket.on("markNotificationsRead", async (userId) => {
+            await notificationUseCase.markAsRead(userId)
         });
 
       
