@@ -82,6 +82,6 @@ export class NotificationRepository implements INotificationRepository {
     
 
     async markNotificationsAsRead(userId: string): Promise<void> {
-        await NotificationModel.updateMany({ user: userId, isRead: false }, { $set: { isRead: true } });
+        await NotificationModel.deleteMany({ user: userId });
     }
 }
