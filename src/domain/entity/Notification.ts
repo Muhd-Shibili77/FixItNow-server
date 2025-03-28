@@ -1,6 +1,6 @@
 
 class Notification{
-    public id!: string;
+    public _id!: string;
     public user!: string;
     public sender!: string;
     public senderModel!: string;

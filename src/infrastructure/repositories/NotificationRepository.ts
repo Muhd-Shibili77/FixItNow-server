@@ -19,7 +19,7 @@ export class NotificationRepository implements INotificationRepository {
         }
         
         return new Notification({
-            id:newNotification.id,
+            _id:newNotification.id,
             sender:newNotification.sender,
             type:newNotification.type,
             message:newNotification.message,
