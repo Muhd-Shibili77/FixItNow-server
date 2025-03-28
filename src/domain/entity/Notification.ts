@@ -8,6 +8,8 @@ class Notification{
     public message!: string;
     public isRead!: boolean;
     public timestamp!: Date;
+    public senderName?: string;  // Add this
+    public senderProfileImage?: string;  // Add this
     
     constructor(data: Partial<Notification>) {
         Object.assign(this, data);
