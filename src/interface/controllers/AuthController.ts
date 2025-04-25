@@ -149,7 +149,7 @@ export class AuthController {
 
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
-        // secure:true,
+        secure:true,
         sameSite: "strict",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
