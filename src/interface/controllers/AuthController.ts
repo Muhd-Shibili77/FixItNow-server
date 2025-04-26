@@ -79,7 +79,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -124,7 +124,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -148,7 +148,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -181,7 +181,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -207,7 +207,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -241,7 +241,7 @@ export class AuthController {
       res.cookie("refreshToken", response.refreshToken, {
         httpOnly: true,
         secure:true,
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
@@ -311,7 +311,7 @@ export class AuthController {
       res.clearCookie("refreshToken", {
         httpOnly: true,
         secure: true, // Ensure this is set in production (HTTPS)
-        sameSite: "lax",
+        sameSite: "none",
       });
       return res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
