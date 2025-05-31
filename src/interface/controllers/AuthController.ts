@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthUseCase } from "../../application/useCases/AuthUseCase";
+import { StatusCode } from "../../application/constant/statusCode";
 
 export class AuthController {
   constructor(private AuthUseCase: AuthUseCase) {}
@@ -8,10 +9,10 @@ export class AuthController {
     try {
       const email: string = req.body.email;
       const response = await this.AuthUseCase.sentOTP({ email });
-      res.json({ success: true, message: "otp sented successfully", response });
+      res.status(StatusCode.OK).json({ success: true, message: "otp sented successfully", response });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
   async resentOTP(req: Request, res: Response): Promise<void> {
@@ -19,24 +20,24 @@ export class AuthController {
       const email: string = req.body.email;
 
       const response = await this.AuthUseCase.ReSentOTP({ email });
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "otp re-sented successfully",
         response,
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
   async forgetSentOTP(req: Request, res: Response): Promise<void> {
     try {
       const email: string = req.body.email;
       const response = await this.AuthUseCase.forgetSentOTP({ email });
-      res.json({ success: true, message: "otp sented successfully", response });
+      res.status(StatusCode.OK).json({ success: true, message: "otp sented successfully", response });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
   async forgetResentOTP(req: Request, res: Response): Promise<void> {
@@ -44,14 +45,14 @@ export class AuthController {
       const email: string = req.body.email;
 
       const response = await this.AuthUseCase.forgetReSentOTP({ email });
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "otp re-sented successfully",
         response,
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -59,10 +60,10 @@ export class AuthController {
     try {
       const { email, otp } = req.body;
       await this.AuthUseCase.verifyOTP({ email: email, otp: otp });
-      res.json({ success: true, message: "otp verified successfully" });
+      res.status(StatusCode.OK).json({ success: true, message: "otp verified successfully" });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -83,7 +84,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "User registered successfully",
         response,
@@ -91,7 +92,7 @@ export class AuthController {
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -128,7 +129,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "worker registered successfully",
         response,
@@ -136,7 +137,7 @@ export class AuthController {
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -152,7 +153,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      return res.status(200).json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message: "Login successful",
         response,
@@ -185,13 +186,13 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      return res.status(200).json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message: "Google login successful",
         ...response,
       });
     } catch (error: any) {
-      return res.status(400).json({
+      return res.status(StatusCode.BAD_REQUEST).json({
         success: false,
         message: error.message,
       });
@@ -211,7 +212,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "User registered with google successfully",
         response,
@@ -219,7 +220,7 @@ export class AuthController {
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -245,7 +246,7 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "worker registered with google successfully",
         response,
@@ -253,7 +254,7 @@ export class AuthController {
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -269,7 +270,7 @@ export class AuthController {
       const newAccessToken = await this.AuthUseCase.newAccessToken(
         refreshToken
       );
-      return res.status(200).json({
+      return res.status(StatusCode.OK).json({
         success: true,
         accessToken: newAccessToken,
       });
@@ -290,7 +291,7 @@ export class AuthController {
         confirmPassword,
         email
       )
-      return res.status(200).json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message:'password has been changed'
       });
@@ -313,10 +314,10 @@ export class AuthController {
         secure: true, // Ensure this is set in production (HTTPS)
         sameSite: "none",
       });
-      return res.status(200).json({ message: "Logged out successfully" });
+      return res.status(StatusCode.OK).json({ message: "Logged out successfully" });
     } catch (error) {
       console.error("Logout Error:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+      return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
     }
   }
 }

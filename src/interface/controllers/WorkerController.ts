@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { WorkerUseCase } from "../../application/useCases/WorkerUseCase";
+import { StatusCode } from "../../application/constant/statusCode";
 
 interface WorkerUpdateData {
   id: string;
@@ -28,10 +29,10 @@ export class WorkerController {
       }
 
       const response = await this.WorkerUseCase.fetchWorker(workerId);
-      res.json({ success: true, message: "worker details fetched", response });
+      res.status(StatusCode.OK).json({ success: true, message: "worker details fetched", response });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -55,14 +56,14 @@ export class WorkerController {
       };
 
       const response = await this.WorkerUseCase.WorkerProfileEdit(updateData);
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "worker profile edited successfully",
         response,
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -98,7 +99,7 @@ export class WorkerController {
       totalReviews: worker.totalReviews,
     }));
 
-    res.json({
+    res.status(StatusCode.OK).json({
       success: true,
       message: "worker fetched successfully",
       response: parsedResponse,
@@ -112,19 +113,19 @@ export class WorkerController {
       const id = req.query.id as string;
       if (!id) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({ success: false, message: "worker ID is required" });
       }
       const response = await this.WorkerUseCase.getJob(id);
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "jobs fetching successfull",
         response,
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -134,20 +135,20 @@ export class WorkerController {
 
       if (!id) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({ success: false, message: "job ID is required" });
       }
       const isAccepted = req.body.isAccepted;
       const response = await this.WorkerUseCase.updateJob(id, isAccepted);
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: "jobs updated successfull",
         response,
       });
     } catch (error: any) {
       console.error(error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -158,17 +159,17 @@ export class WorkerController {
 
       if (!bookingId || !workStatus) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({ success: false, message: "Missing bookingId or workStatus" });
       }
       await this.WorkerUseCase.toggleWorkStatus(bookingId, workStatus);
-      return res.json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message: "work status updated successfull",
       });
     } catch (error: any) {
       console.error("toggle work status Error:", error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
   async toggleReachStatus(req: Request, res: Response) {
@@ -178,20 +179,20 @@ export class WorkerController {
 
       if (!bookingId || !reachStatus) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({
             success: false,
             message: "Missing bookingId or reachStatus",
           });
       }
       await this.WorkerUseCase.toggleReachStatus(bookingId, reachStatus);
-      return res.json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message: "reach status updated successfull",
       });
     } catch (error: any) {
       console.error("toggle reach status Error:", error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
   async updateAmount(req: Request, res: Response) {
@@ -201,17 +202,17 @@ export class WorkerController {
 
       if (!bookingId || !amount) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({ success: false, message: "Missing bookingId or amount" });
       }
       await this.WorkerUseCase.updateAmount(bookingId, amount);
-      return res.json({
+      return res.status(StatusCode.OK).json({
         success: true,
         message: "amount updated successfull",
       });
     } catch (error: any) {
       console.error("amount updating Error:", error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -221,19 +222,19 @@ export class WorkerController {
 
       if (!workerId) {
         return res
-          .status(400)
+          .status(StatusCode.BAD_REQUEST)
           .json({ success: false, message: "Missing workerId " });
       }
 
       const response = await this.WorkerUseCase.getWallet(workerId);
-      res.json({
+      res.status(StatusCode.OK).json({
         success: true,
         message: " fetching wallet successfull",
         response,
       });
     } catch (error: any) {
       console.error("wallet fetching error:", error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
   }
 
@@ -241,13 +242,13 @@ export class WorkerController {
     try {
       const { userId } = req.body;
       if (!userId) {
-        return res.status(400).json({ error: "userId  was required" });
+        return res.status(StatusCode.BAD_REQUEST).json({ error: "userId  was required" });
       }
 
       await this.WorkerUseCase.createStripeAccount(userId)
-      res.json({ success: true,message:'stripe account created successfully' });
+      res.status(StatusCode.OK).json({ success: true,message:'stripe account created successfully' });
     } catch (error:any) {
-        res.json({ success: false, error: error.message });
+        res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ success: false, error: error.message });
     }
   }
 
@@ -255,15 +256,15 @@ export class WorkerController {
     try {
       const { userId } = req.body;
       if (!userId) {
-        return res.status(400).json({ error: "userId  was required" });
+        return res.status(StatusCode.BAD_REQUEST).json({ error: "userId  was required" });
       }
 
       const response = await this.WorkerUseCase.onboardingLink(userId)
      
-      res.json({ success: true,url:response.url });
+      res.status(StatusCode.OK).json({ success: true,url:response.url });
       
     } catch (error:any) {
-      res.json({ success: false, error: error.message });
+      res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ success: false, error: error.message });
     }
   }
   async testPayout(req:Request,res:Response){
@@ -271,15 +272,15 @@ export class WorkerController {
       const { userId } = req.body;
      
       if (!userId) {
-        return res.status(400).json({ error: "userId  was required" });
+        return res.status(StatusCode.BAD_REQUEST).json({ error: "userId  was required" });
       }
 
       const response = await this.WorkerUseCase.testPayout(userId)
      
-      res.json({ success: true});
+      res.status(StatusCode.OK).json({ success: true});
       
     } catch (error:any) {
-      res.json({ success: false, error: error.message });
+      res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ success: false, error: error.message });
     }
   }
 
@@ -292,7 +293,7 @@ export class WorkerController {
 
       await this.WorkerUseCase.updateWorkerPassword(userId,newPassword,currentPassword)
 
-      res.json({
+      res.status(StatusCode.OK).json({
         success:true,
         message:'worker password updated successfull',
       })
@@ -301,12 +302,12 @@ export class WorkerController {
     } catch (error) {
       console.error('Password update error:', error);
       if (error instanceof Error) {
-        return res.status(400).json({ 
+        return res.status(StatusCode.BAD_REQUEST).json({ 
           success: false, 
           message: error.message 
         });
       }
-      res.status(500).json({ 
+      res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ 
         success: false, 
         message: 'Password update failed' 
       });

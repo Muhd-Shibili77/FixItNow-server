@@ -1,3 +1,4 @@
+import { StatusCode } from "../../application/constant/statusCode";
 import { ServiceUseCase } from "../../application/useCases/ServiceUseCase";
 import { Request, Response } from "express";
 
@@ -9,10 +10,10 @@ export class ServiceController {
         if(!req.file){
           throw new Error('file is missing')
         }
-        res.json({url:req.file.path})
+        res.status(StatusCode.OK).json({url:req.file.path})
       } catch (error) {
         console.error('Upload error:', error);
-        res.status(500).json({ message: 'File upload failed' });
+        res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: 'File upload failed' });
     }
     }
 
@@ -22,14 +23,14 @@ export class ServiceController {
             const { name,icon } = req.body;
 
             const response = await this.serviceUseCase.addService(name, icon);
-            res.json({
+            res.status(StatusCode.OK).json({
               success: true,
               message: "service added successfull",
               response,
             });
           } catch (error:any) {
             console.error(error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
           }
     }
 
@@ -38,7 +39,7 @@ export class ServiceController {
         const response = await this.serviceUseCase.fetchService()
         
         
-        res.json({
+        res.status(StatusCode.OK).json({
           success: true,
           message: "service fetching successfull",
           response,
@@ -47,7 +48,7 @@ export class ServiceController {
 
       } catch (error:any) {
         console.error(error);
-        res.status(400).json({ success: false, message: error.message });
+        res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
     }
 
@@ -71,7 +72,7 @@ export class ServiceController {
               isDelete:service.isDelete
           }));
   
-          res.json({
+          res.status(StatusCode.OK).json({
               success: true,
               message: "Service fetched successfully",
               response: parsedResponse,
@@ -80,7 +81,7 @@ export class ServiceController {
           });
         } catch (error:any) {
             console.error(error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -90,17 +91,17 @@ export class ServiceController {
           const isDelete = req.query.action as string | undefined
         
           if (!isDelete || !serviceId) {
-            return res.status(400).json({ success: false, message: "Missing actions or id" });
+            return res.status(StatusCode.BAD_REQUEST).json({ success: false, message: "Missing actions or id" });
           }
 
           await this.serviceUseCase.delService(serviceId,isDelete)
-          return res.json({
+          return res.status(StatusCode.OK).json({
             success: true,
             message: "service toggle delete successfull",
         });
       } catch (error:any) {
         console.error(error);
-        res.status(400).json({ success: false, message: error.message });
+        res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
     }
     }
 
@@ -109,18 +110,18 @@ export class ServiceController {
         const serviceId = req.query.serviceId as string
         const { name,icon } = req.body;
         if (!serviceId) {
-          return res.status(400).json({ message: 'Service ID is required' });
+          return res.status(StatusCode.BAD_REQUEST).json({ message: 'Service ID is required' });
         }
         
         await this.serviceUseCase.updateService(serviceId,name,icon)
 
-        return res.status(200).json({
+        return res.status(StatusCode.OK).json({
           success: true, 
           message: 'Service updated successfully', 
         });
       } catch (error:any) {
         console.error('Error updating service:', error);
-        res.status(400).json({ success: false, message: error.message });
+        res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
        }
     }
 }

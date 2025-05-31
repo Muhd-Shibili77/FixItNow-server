@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import { AdminUseCase } from "../../application/useCases/AdminUseCase";
-
+import { StatusCode } from "../../application/constant/statusCode";
 export class AdminController{
     constructor(private AdminUseCase :AdminUseCase){}
 
@@ -17,7 +17,7 @@ export class AdminController{
                 maxAge:7 * 24 * 60 * 60 * 1000,
             });
 
-            return res.status(200).json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "Login successful",
                 response,
@@ -26,7 +26,7 @@ export class AdminController{
             
         } catch (error:any) {
             console.error("Login Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -40,7 +40,7 @@ export class AdminController{
           const query = search ? { username: { $regex: search, $options: "i" } } : {};
 
             const {users,totalPages} = await this.AdminUseCase.fetchUsers(query,page,limit)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "users list fetching successfull",
                 response:users,
@@ -49,7 +49,7 @@ export class AdminController{
               });
         } catch (error:any) {
             console.error("fetching user Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
     async fetchWorkers(req:Request,res:Response){
@@ -63,7 +63,7 @@ export class AdminController{
             
           
             const {workers,totalPages} = await this.AdminUseCase.fetchWorkers(query,page,limit)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "worker list fetching successfull",
                 response:workers,
@@ -72,7 +72,7 @@ export class AdminController{
               });
         } catch (error:any) {
             console.error("fetching worker Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
     async fetchBookings(req:Request,res:Response){
@@ -84,7 +84,7 @@ export class AdminController{
             const query = search ? { bookingNo: { $regex: search, $options: "i" } } : {};
 
             const {bookings,totalPages} = await this.AdminUseCase.fetchBookings(query,page,limit)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "booking list fetching successfull",
                 response:bookings,
@@ -93,7 +93,7 @@ export class AdminController{
               });
         } catch (error:any) {
             console.error("fetching bookings Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -104,17 +104,17 @@ export class AdminController{
             const id = req.query.id as string | undefined;
     
             if (!actions || !id) {
-                return res.status(400).json({ success: false, message: "Missing actions or id" });
+                return res.status(StatusCode.BAD_REQUEST).json({ success: false, message: "Missing actions or id" });
             }
 
             await this.AdminUseCase.toggleBlockUser(actions,id)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "user toggle block successfull",
             });
         } catch (error:any) {
             console.error("toggle block user Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
     async toggleBlockWorker(req:Request,res:Response){
@@ -124,17 +124,17 @@ export class AdminController{
             const id = req.query.id as string | undefined;
     
             if (!actions || !id) {
-                return res.status(400).json({ success: false, message: "Missing actions or id" });
+                return res.status(StatusCode.BAD_REQUEST).json({ success: false, message: "Missing actions or id" });
             }
 
             await this.AdminUseCase.toggleBlockWorker(actions,id)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "worker toggle block successfull",
             });
         } catch (error:any) {
             console.error("toggle block worker Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -143,13 +143,13 @@ export class AdminController{
             const bookingId = req.query.id as string 
             
             await this.AdminUseCase.toggleCancelBooking(bookingId)
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "cancel booking successfull",
             });
         } catch (error:any) {
             console.error("toggle cancel booking Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -158,7 +158,7 @@ export class AdminController{
 
             const response = await this.AdminUseCase.fetchDashboardData()
 
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "fetching details successfull",
                 response
@@ -166,7 +166,7 @@ export class AdminController{
 
         } catch (error:any) {
             console.error("fetch dashboard details error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 
@@ -174,7 +174,7 @@ export class AdminController{
         try {
 
             const response = await this.AdminUseCase.fetchChartData()
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "fetching chart data successfull",
                 response
@@ -182,7 +182,7 @@ export class AdminController{
             
         } catch (error:any) {
             console.error("fetch chart  data error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
     
@@ -196,7 +196,7 @@ export class AdminController{
 
             const {bookings,totalPages} = await this.AdminUseCase.fetchEarnings(query,page,limit)
             
-            return res.json({
+            return res.status(StatusCode.OK).json({
                 success: true,
                 message: "earnings list fetching successfull",
                 response:bookings,
@@ -205,7 +205,7 @@ export class AdminController{
               });
         } catch (error:any) {
             console.error("fetching earnins Error:", error);
-            res.status(400).json({ success: false, message: error.message });
+            res.status(StatusCode.BAD_REQUEST).json({ success: false, message: error.message });
         }
     }
 }

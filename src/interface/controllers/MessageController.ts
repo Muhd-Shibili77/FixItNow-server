@@ -1,6 +1,6 @@
 import { Request,Response } from "express";
 import { MessageUseCase } from "../../application/useCases/MessageUseCase";
-
+import { StatusCode } from "../../application/constant/statusCode";
 export class MessageContoller{
     constructor(private MessageUseCase:MessageUseCase){}
 
@@ -9,11 +9,11 @@ export class MessageContoller{
 
             const {sender,senderModel,receiver,receiverModel,message}=req.body
             const messageDate = await this.MessageUseCase.saveMessage(sender,senderModel,receiver,receiverModel,message)
-            res.status(201).json({message:'message send successfully',messageDate});
+            res.status(StatusCode.CREATED).json({message:'message send successfully',messageDate});
 
         } catch (error:any) {
             console.error(error);
-            res.status(500).json({ message: "Error sending message", error })
+            res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Error sending message", error })
         }
     }
 
@@ -24,11 +24,11 @@ export class MessageContoller{
            
             const messages = await this.MessageUseCase.getMessage(sender,receiver)
             
-            res.status(201).json({message:"message getting successfull",messages})
+            res.status(StatusCode.CREATED).json({message:"message getting successfull",messages})
 
         } catch (error:any) {
             console.error(error);
-            res.status(500).json({ message: "Error geting message", error })
+            res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Error geting message", error })
         }
     }
 
@@ -37,11 +37,11 @@ export class MessageContoller{
             const userId = req.query.userId as string
             
             const chatlist = await this.MessageUseCase.getChatList(userId)
-            res.status(201).json({message:"chatlist getting successfull",chatlist})
+            res.status(StatusCode.CREATED).json({message:"chatlist getting successfull",chatlist})
 
         } catch (error:any) {
             console.error(error);
-            res.status(500).json({ message: "Error geting chatlist", error })
+            res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: "Error geting chatlist", error })
         }
     }
 
@@ -53,7 +53,7 @@ export class MessageContoller{
             res.json({ url: req.file.path }); 
         } catch (error) {
             console.error('Upload error:', error);
-            res.status(500).json({ message: 'File upload failed' });
+            res.status(StatusCode.INTERNAL_SERVER_ERROR).json({ message: 'File upload failed' });
         }
     }
 }

@@ -24,6 +24,7 @@ const io = new Server(httpServer,{
     cors:{
         origin:'https://www.fixitnow.cfd',
         methods:['GET','POST'],
+        credentials: true,
     }
 })
 
